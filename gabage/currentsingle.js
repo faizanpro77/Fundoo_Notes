@@ -2,10 +2,6 @@ import React from 'react'
 import { View, Text, TextInput, Button, Image, Touchable, TouchableOpacity } from 'react-native'
 import ForgotPasswordCss from '../css/ForgotPasswordScreenCss'
 import Global from '../css/Global'
-import {CheckEmail} from '../services/UserServices'
-import Snackbar from 'react-native-snackbar';
-
-
 class ForgotPasswordScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -13,6 +9,10 @@ class ForgotPasswordScreen extends React.Component {
             Email: '',
             EmailError: ''
         }
+    }
+    
+    navigateSignIn = () => {
+        this.props.navigation.navigate('SignIn')
     }
 
     validateEmail = (val) => {
@@ -26,34 +26,9 @@ class ForgotPasswordScreen extends React.Component {
             this.setState({ EmailError: '' })
     }
 
-    onSubmit =  async() => {
-        let response = await CheckEmail(this.state.Email)
+    
 
-            if(response == 'success'){
-
-        Snackbar.show({
-            text: 'valid email',
-            duration: Snackbar.LENGTH_INDEFINITE,
-            action: {
-                text: 'UNDO',
-                textColor: 'green',
-            },
-        });
-        this.props.navigation.navigate('ResetPassword')
-    } else {
-            Snackbar.show({
-                text: 'invalid emial',
-                duration: Snackbar.LENGTH_INDEFINITE,
-                action: {
-                    text: 'UNDO',
-                    textColor: 'red', 
-        }})}
-
-    }
-
-    navigateSignIn = () => {
-        this.props.navigation.navigate('SignIn')
-    }
+    
 
     render() {
         return (
@@ -69,14 +44,16 @@ class ForgotPasswordScreen extends React.Component {
                 <View style={ForgotPasswordCss.container2}>
 
                     <View style={ForgotPasswordCss.container3}>
-                              
+                  
+
+                        
                         <View>
                         <TextInput placeholder='Email Id' style={ForgotPasswordCss.TextInput} onChangeText={this.validateEmail} />
                         <Text style={ForgotPasswordCss.TextRedError}>{this.state.EmailError}</Text>
                         </View>
 
-                        <TouchableOpacity style={ForgotPasswordCss.buttonSubmit} onPress = {this.onSubmit}>
-                            <Text style={ForgotPasswordCss.SubmitButtontxt}>Submit</Text>
+                        <TouchableOpacity style={ForgotPasswordCss.buttonReset}>
+                            <Text>Reset Password</Text>
                         </TouchableOpacity>
 
                         <View style={ForgotPasswordCss.BackToSignIntxtView}>

@@ -21,29 +21,40 @@ const styles = StyleSheet.create({
         borderColor:'gray',
         borderRadius:10,
         height:50,
+        paddingLeft:17
     },
     TextRedError:{
-        color: 'red'
+        color: 'red',
+        height:50,
+        top:4
+
     },
     LastNameInput:{
         borderWidth:1,
         borderColor:'gray',
         borderRadius:10,
         height:50,
+        paddingLeft:17
     },
     EmailIdInput:{
         borderWidth:1,
         borderColor:'gray',
         borderRadius:10,
         height:50,
+        paddingLeft:17
+
     },
     PasswordInput:{
         borderWidth:1,
         borderColor:'gray',
         borderRadius:10,
         height:50,
-    },
+        paddingLeft:17
 
+    },
+SignUptxt:{
+fontSize:17
+},
     buttonSignUP:{
         backgroundColor:'#ffa500',
         height:50,
@@ -54,7 +65,8 @@ const styles = StyleSheet.create({
    TextView:{
     flexDirection: 'row',
     justifyContent:'center',
-    alignItems:'center'
+    alignItems:'center',
+    top:10
    },
    LoginText:{
     fontWeight:'bold',

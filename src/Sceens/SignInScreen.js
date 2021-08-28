@@ -1,11 +1,11 @@
 
 import React, { Component } from 'react';
-import firestore, { firebase } from '@react-native-firebase/firestore';
 
 import { View, Text, Image, TextInput, Button, TouchableOpacity, Touchable } from 'react-native';
 import styles from '../css/SignIncss';
 import Global from '../css/Global';
-//import { signIn,  } from '../services/UserServeces';
+import Snackbar from 'react-native-snackbar';
+import { signIn,  } from '../services/UserServices';
 
 
 class SignInScreen extends Component {
@@ -15,7 +15,8 @@ class SignInScreen extends Component {
             Email: '',
             EmailError: '',
             Password: '',
-            passwordError: '',    
+            passwordError: '',
+
         }
 
     }
@@ -29,7 +30,7 @@ class SignInScreen extends Component {
     }
 
     validateEmail = (val) => {
-        this.setState({Email:val});
+        this.setState({ Email: val });
         let rjx = /^[0-9a-zA-Z]+([._+-][0-9A-Za-z]+)*@[0-9A-Za-z]+[.][a-zA-Z]{2,4}([.][a-zA-Z]{2,4})?$/
         let isValid = rjx.test(val)
         if (!isValid)
@@ -39,7 +40,7 @@ class SignInScreen extends Component {
     }
 
     validatePassword = (val) => {
-        this.setState({Password:val});
+        this.setState({ Password: val });
         let rjx = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[*.!@#$%^&(){}:'<>,.>/~`_+=|].).{8,}$/
         let isValid = rjx.test(val)
         if (!isValid)
@@ -48,33 +49,34 @@ class SignInScreen extends Component {
             this.setState({ passwordError: '' })
     }
 
-    onSubmit = async() =>{
-      // var response = signIn(this.state.Email,this.state.Password)
+    onSubmit =  async() => {
+        let response = await signIn(this.state.Email, this.state.Password)
 
-                     console.log('>>>>>>>>>>>',response)
-     }
+            if(response == 'success'){
 
-    //  if(response)
-    //     message='successfully login'
-    //     else
-    //     message='invalid user'
+        Snackbar.show({
+            text: 'login successfully',
+            duration: Snackbar.LENGTH_INDEFINITE,
+            action: {
+                text: 'UNDO',
+                textColor: 'green',
+            },
+        });
+        this.props.navigation.navigate('DashBoard')
+    } else {
+            Snackbar.show({
+                text: 'login fail',
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: {
+                    text: 'UNDO',
+                    textColor: 'red', 
+        }})}
 
-  
-    //  if(gol = 1){
-    //    Snackbar.show({
-    //     text: 'Hello world',
-    //     duration: Snackbar.LENGTH_SHORT,
-    //   });
-    //  }
-    
-
-
-
-    
+    }
+        
     render() {
         return (
             <View style={styles.container1}>
-
                 <View style={Global.ImageLabelView}>
                     <Image source={require('G:/@react native bridgelabz/Fundoo_Notes_RN/src/Assets/images/noteslogo.png')}
                         style={Global.ImageLogo}>
@@ -86,15 +88,13 @@ class SignInScreen extends Component {
 
                     <View style={styles.container3}>
 
-
-
                         <View>
-                            <TextInput placeholder='Email Id' style={styles.TextInput} onChangeText={this.validateEmail} />
+                            <TextInput placeholder='Email Id'  style={styles.TextInput} onChangeText={this.validateEmail} />
                             <Text style={styles.regexredError}>{this.state.EmailError}</Text>
                         </View>
 
                         <View>
-                            <TextInput placeholder='Password' style={styles.TextInput} onChangeText={this.validatePassword} />
+                            <TextInput placeholder='Password' secureTextEntry={true} style={styles.TextInput} onChangeText={this.validatePassword} />
                             <Text style={styles.regexredError}>{this.state.passwordError}</Text>
                         </View>
 
@@ -104,9 +104,8 @@ class SignInScreen extends Component {
 
 
                         <TouchableOpacity style={styles.buttonSignInView} onPress={this.onSubmit} >
-                            <Text>SignIn</Text>
+                            <Text style={styles.SignIntxt}>SignIn</Text>
                         </TouchableOpacity>
-
 
                         <View style={styles.accountSignUpView}>
                             <Text style={styles.accounttxt}>

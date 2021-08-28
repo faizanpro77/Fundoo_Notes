@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
         marginRight: '10%',
         marginLeft: '10%',
         justifyContent: 'center',
-       },
+    },
     container3: {
         justifyContent: 'space-between',
         height: '45%'
@@ -19,17 +19,21 @@ const styles = StyleSheet.create({
     TextInput: {
         borderWidth: 1,
         borderColor: 'gray',
-        height:50,
-        borderRadius:10      
+        height: 50,
+        borderRadius: 10,
+        paddingLeft: 17
     },
 
-    Forgottxt:{
-        fontWeight:'bold',
-        fontSize:17,
-        color:'#ffa500'
+    Forgottxt: {
+        fontWeight: 'bold',
+        fontSize: 17,
+        color: '#ffa500',
+        bottom: 10,
     },
     accountSignUpView: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        top: 10
+
     },
     accounttxt: {
         paddingLeft: '15%'
@@ -40,22 +44,24 @@ const styles = StyleSheet.create({
         fontSize: 17,
         color: '#ffa500'
     },
-    
-    regexredError:{
-        color:'red'
+
+    regexredError: {
+        color: 'red',
+        height: 55,
+        top: 4
     },
 
-    buttonSignInView:{
-        backgroundColor:'#ffa500',
-        height:50,
-        borderRadius:10,
-        justifyContent:'center',
-        alignItems:'center'
-
-
-        
+    buttonSignInView: {
+        backgroundColor: '#ffa500',
+        height: 50,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    SignIntxt: {
+        fontSize: 17
     }
-    
+
 
 });
 

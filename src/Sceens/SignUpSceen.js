@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, View, Text, TextInput, Button, TouchableOpacity, Image } from 'react-native'
 import styles from '../css/SignUpcss';
 import Global from '../css/Global';
-import { signUp } from '../services/UserServeces';
+import { signUp } from '../services/UserServices';
 
 class SignUpSceen extends Component {
     constructor(props) {
@@ -116,7 +116,7 @@ class SignUpSceen extends Component {
                     </View>
 
                     <TouchableOpacity style={styles.buttonSignUP} onPress={this.onSubmit}>
-                            <Text>SignUp</Text>
+                            <Text style={styles.SignUptxt}>SignUp</Text>
                         </TouchableOpacity>
 
 

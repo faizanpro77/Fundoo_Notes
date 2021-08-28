@@ -1,125 +1,39 @@
-export async function signIn(emailData,PasswordData) {
+ plusView:{
+//flex:1,
+//backgroundColor:'transparent',
+//borderColor:'transparent',
+borderColor:'blue',
 
-      console.log('emailData = ',emailData)
-      console.log('PasswordData = ',PasswordData)
-  
+borderWidth:10,
+borderRadius:1000,
+//backgroundColor:'blue',
+//borderBottomWidth:3,
+width:73,
+height:73,
+bottom: '45%',
+right: '3.9%',
+position: 'absolute',
+},
+Touchablestyle:{
+   //flex: 1,
+    //backgroundColor: '#ffffff',
+    borderRadius: 1000,
+    width: 60,
+    height: 60,
+    //elevation: 7,
+    position: 'absolute',
+    alignSelf: 'center',
+   // borderColor: '#ffffff',
+   borderColor: 'red',
+    borderWidth: 5,
+   
 
-      
-      const users = await firestore()
-        .collection('Users')
-        // Filter results
-        .where('Emial', '==', emailData)
-        .where('Password', '==', PasswordData)
-        .get().then((data => {
-          data
-            .docs
-            .forEach(doc => {
-               doc.exists
-              console.log(doc.exists)
-
-            });  })
-
-            )
-          }
-
-
-
-
----------------------------------------------------------
-
-export async function signIn(emailData) {
-  console.log('llllllllllllll',Object.values(emailData))
-  // var emaildata = signInData;
-      const users = await firestore()
-        .collection('Users')
-        // Filter results
-        .where('Emial', '==', emailData)
-        //.where('Password', '==', this.state.Password)
-        .get()
-        console.log(users)
-        if(users.empty){
-        console.log('Email or password is wrong or users does not exist')
-        }
-       else
-       {
-        console.log('User is successfully loged in navigate to home page')
-    
-       }
-                     
-    }
- --------------------------------------------------------
- getUser = async() =>{
-      const users = await firestore()
-        .collection('Users')
-        // Filter results
-        .where('Emial', '==', this.state.Email)
-        .where('Password', '==', this.state.Password)
-
-        .get()
-        
-        if(users.empty){
-        console.log('Email or password is wrong or users does not exist')
-        }
-       else
-       {
-        console.log('User is successfully loged in navigate to home page')
-    
-       }
-    
-    Password        
-       
-    }
-------------------------------------------------------------
-
-// onSubmit = async() =>{
-    //      let signInData = {
-    //          Emial:this.state.Email,
-    //          Password:this.state.Password
-    //      }
- 
-    //    let response = signIn(signInData)
-    //  }
-
-....................................................................
-getUser = async() =>{
-      const users = await firestore()
-        .collection('Users')
-        // Filter results
-        .where('Emial', '==', this.state.Email)
-        .where('Password', '==', this.state.Password)
-
-        .get()
-        
-        if(users.empty){
-        console.log('Email or password is wrong or users does not exist')
-        }
-       else
-       {
-        console.log('User is successfully loged in navigate to home page')
-    //   var matchedUser = users[0]
-    //    console.log('Matched User',matchedUsers)
-    //    const {Emial} = matchedUser.data();
-    //    console.log('Matched User Email = ',Emial)
-       }
-
-
-
-...............................................................................................
-onSubmit = async() =>{
-        try{
-        const user = await firestore().collection('Users').get().then((querySnapshot) => {
-            querySnapshot.forEach(doc => {
-                const {Email} = doc.data();
-            })
-        })
-       // console.log(users)
-       // console.warn(Email)
-
-
-      if(Email == this.state.Email)
-         console.warn('login successfull')
-    }catch(e){
-        console.log(e)
-    }
+},
+   
+    plusImg: {
+        width: 50,
+        height: 50,
+       // flex: 1,
+        //alignSelf: 'center'
 
     }

@@ -30,8 +30,10 @@ const ForgotPasswordCss = StyleSheet.create({
         alignItems: 'center'
 
     },
-
-    buttonReset:{
+SubmitButtontxt:{
+fontSize:17
+},
+    buttonSubmit:{
         backgroundColor:'#ffa500',
         height:50,
         borderRadius:10,
@@ -42,12 +44,15 @@ const ForgotPasswordCss = StyleSheet.create({
 
     BackToSignIntxt: {
         fontWeight: 'bold',
-        color: '#ffa500'
+        color: '#ffa500',
+        top:4
 
     },
 
     TextRedError: {
-        color: 'red'
+        color: 'red',
+        height:50,
+        top:4
     }
 
 
