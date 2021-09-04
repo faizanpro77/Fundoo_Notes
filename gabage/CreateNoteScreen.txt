@@ -1,0 +1,97 @@
+import React, {Component} from 'react';
+import {TouchableOpacity, View,Image, TextInput, ImageStore} from 'react-native';
+import EditeNoteScreenCss from '../css/EditNoteScreenCss';
+import {noteData} from '../services/NotesServices'
+
+export default class CreateNoteScreen extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state={
+            title:'',
+            noteDescription:''
+        }
+    }
+
+    handleTitle = (text)=>{
+        this.setState({title:text})
+    }
+
+    handleNoteDescription = (text) => {
+            this.setState({noteDescription:text})
+    }
+
+    backArrow = () =>{
+console.log('...................'+this.state.title)
+console.log('................'+this.state.noteDescription)
+      let response =  noteData(this.state.title,this.state.noteDescription);
+      
+    } 
+
+render(){
+    return(
+        <View style={EditeNoteScreenCss.container1}>
+            <View  style={EditeNoteScreenCss.container2} >
+                <View>
+                    <TouchableOpacity onPress = {this.backArrow}>
+                        <Image style={EditeNoteScreenCss.backArrowpic} source = {require('../Assets/icons/backArrow.png')}  />
+                    </TouchableOpacity>
+                </View>
+
+                <View>
+                    <TouchableOpacity>
+                    <Image style={EditeNoteScreenCss.pinpic} source={require('../Assets/icons/pin.png')} />
+                    </TouchableOpacity>
+                </View>
+
+                <View>
+                    <TouchableOpacity>
+                    <Image style={EditeNoteScreenCss.reminderpluspic} source = {require('../Assets/icons/reminderplus.png')}/>
+                    </TouchableOpacity>
+                </View>
+
+            <View>
+                <TouchableOpacity>
+                <Image style={EditeNoteScreenCss.archivepic} source = {require('../Assets/icons/archive.png')} />
+                </TouchableOpacity>
+            </View>
+            </View>
+            <View style={{top:11}}>
+                <TextInput placeholder='Title' 
+                 style={EditeNoteScreenCss.titleinputtxt}
+                 multiline={true}
+                 numberOfLines={1}
+                 maxLength={100}
+                 onChangeText = {this.handleTitle}
+                 />
+               
+                <TextInput
+                multiline={true}
+                numberOfLines={1}
+                placeholder='Note'               
+                style={EditeNoteScreenCss.noteinputtext}
+                onChangeText = {this.handleNoteDescription}
+                />    
+            </View>
+
+           
+            <View style={EditeNoteScreenCss.footerContainer} >
+                <View style={EditeNoteScreenCss.footer}>
+                    <TouchableOpacity>
+                        <Image style={EditeNoteScreenCss.addfeaturemenue} source = {require('../Assets/icons/plusmenue.png')} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Image style={EditeNoteScreenCss.addcolour} source = {require('../Assets/icons/color.png')} /> 
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Image style={EditeNoteScreenCss.threedotmenue} source={require('../Assets/icons/threedotmenue.png')}/>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+        </View>
+    )
+}        
+}
+
+

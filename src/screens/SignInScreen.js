@@ -6,6 +6,8 @@ import styles from '../css/SignIncss';
 import Global from '../css/Global';
 import Snackbar from 'react-native-snackbar';
 import { signIn,  } from '../services/UserServices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 class SignInScreen extends Component {
@@ -63,6 +65,8 @@ class SignInScreen extends Component {
             },
         });
         this.props.navigation.navigate('DashBoard')
+        this.AsyncStoragedata();
+
     } else {
             Snackbar.show({
                 text: 'login fail',
@@ -73,6 +77,19 @@ class SignInScreen extends Component {
         }})}
 
     }
+
+      AsyncStoragedata = async()=>{
+         console.log('hello')
+        try{
+          await AsyncStorage.setItem('Email',this.state.Email)
+        }catch(err){
+          console.log(err)
+    
+        }
+      }
+    
+
+
         
     render() {
         return (

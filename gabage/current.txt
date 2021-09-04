@@ -1,39 +1,4 @@
- plusView:{
-//flex:1,
-//backgroundColor:'transparent',
-//borderColor:'transparent',
-borderColor:'blue',
-
-borderWidth:10,
-borderRadius:1000,
-//backgroundColor:'blue',
-//borderBottomWidth:3,
-width:73,
-height:73,
-bottom: '45%',
-right: '3.9%',
-position: 'absolute',
-},
-Touchablestyle:{
-   //flex: 1,
-    //backgroundColor: '#ffffff',
-    borderRadius: 1000,
-    width: 60,
-    height: 60,
-    //elevation: 7,
-    position: 'absolute',
-    alignSelf: 'center',
-   // borderColor: '#ffffff',
-   borderColor: 'red',
-    borderWidth: 5,
-   
-
-},
-   
-    plusImg: {
-        width: 50,
-        height: 50,
-       // flex: 1,
-        //alignSelf: 'center'
-
-    }
+ {/* <Card containerStyle={{borderRadius:10,height:'25%',width:'40%',backgroundColor:'yellow',top:30}}>
+                    <Card.Title>Today task</Card.Title>
+                    <Text >*complete keep ui design    </Text>
+                    </Card> */}
