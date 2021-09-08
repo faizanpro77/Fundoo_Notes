@@ -61,7 +61,7 @@ export const getNotes = async() => {
       console.log('...........', error);
       return error;
     });
-  //  console.log("res in note,,,,,,", noteList)
+
     return noteList;
   }
   
