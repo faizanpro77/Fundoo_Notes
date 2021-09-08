@@ -1,5 +1,11 @@
 import React,{Component} from 'react'
 import StackNavigation from './src/Navigation/StackNavigation';
+import {View} from 'react-native'
+// import CreateNoteScreen from './src/screens/CreateNoteScreen';
+// import DashBoardScreen from './src/screens/DashBoardScreen';
+// import DashboardCard from './src/Component/DashboardCard';
+// import ColorChager from './src/Component/Color'
+
 
 
 function App() {
@@ -7,9 +13,9 @@ function App() {
 
    
         return(
-           <StackNavigation/>
+         <StackNavigation/>
         // <View>
-        //    <CreateNoteScreen/>
+        //    <DashBoardScreen/>
         // </View>
                );
     }
