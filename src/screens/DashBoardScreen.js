@@ -6,13 +6,33 @@ import {
   TouchableOpacity,
   Image,
   TouchableHighlight,
+  ScrollView,
 } from 'react-native';
+import {gridlistvalue} from '../Component/DashboardCard';
 import DashBoardCss from '../css/DashBoardCss';
 import DashboardCard from '../Component/DashboardCard';
+
 class DashBoardScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      open: false,
+      strinff: 'fdjjfkslgj',
+    };
   }
+
+  gridView = () => {
+    this.setState({
+      open: !this.state.open,
+    });
+  };
+
+  // gridView = () =>{
+  //   this.setState({
+  //     open:!this.state.open
+  //   })
+
+  // }
 
   navigateCreateNOteScreen = () => {
     this.props.navigation.navigate('CreateNote');
@@ -39,15 +59,28 @@ class DashBoardScreen extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
+
               <View style={DashBoardCss.listprofileview}>
-                <View style={DashBoardCss.listImgview}>
-                  <TouchableOpacity>
-                    <Image
-                      style={DashBoardCss.listImg}
-                      source={require('../Assets/icons/list.png')}
-                    />
-                  </TouchableOpacity>
-                </View>
+                {this.state.open ? (
+                  <View style={DashBoardCss.listImgview}>
+                    <TouchableOpacity onPress={() => this.gridView()}>
+                      <Image
+                        style={DashBoardCss.listImg}
+                        source={require('../Assets/icons/grid.png')}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <View style={DashBoardCss.listImgview}>
+                    <TouchableOpacity onPress={() => this.gridView()}>
+                      <Image
+                        style={DashBoardCss.listImg}
+                        source={require('../Assets/icons/list.png')}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+
                 <View>
                   <TouchableOpacity>
                     <Image
@@ -60,9 +93,11 @@ class DashBoardScreen extends Component {
             </View>
           </Card>
         </View>
-
-        <DashboardCard />
-
+       
+        <ScrollView style={{marginBottom:60}}>
+          <DashboardCard gridListdata={this.state.open} />
+        </ScrollView>
+       
         <View style={DashBoardCss.footerContainer}>
           <View style={DashBoardCss.footer}>
             <View>

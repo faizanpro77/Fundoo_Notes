@@ -1,24 +1,23 @@
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const noteData = async (title, description) => {
-  // let success = 'success';
-  // let fail = 'fail';
+//add title , notes and email to firebase
+export const noteData = async (title, description,color) => {
+ 
   let response;
 
   //console.log('title......' + title);
   //console.log('description.......' + description);
-  try {
+ 
     var value = await AsyncStorage.getItem('Email');
     // console.log('async..........', value);
-  } catch (err) {
-    console.log(err);
-  }
+ 
 
   let userNoteData = {
     Emial: value,
     Title: title,
     Description: description,
+    Colour:color
   };
 
   await firestore()
@@ -32,16 +31,15 @@ export const noteData = async (title, description) => {
       console.log('firebase error' + error);
       return error;
     });
-  getNotes();
   return response;
 };
 
-//getNotes for user authentication
 
+//getNotes for user authentication
 export const getNotes = async() => {
   try {
-    var emialdatavalue = await AsyncStorage.getItem('Email');
-    console.log('async..........', emialdatavalue);
+    var emialdatavalue =  await AsyncStorage.getItem('Email');
+   // console.log('async..........', emialdatavalue);
   } catch (err) {
     console.log(err);
   }
@@ -63,7 +61,6 @@ export const getNotes = async() => {
       console.log('...........', error);
       return error;
     });
-    console.log("res in note,,,,,,", noteList)
-    return  noteList
-   }
-
+  //  console.log("res in note,,,,,,", noteList)
+    return noteList;
+  }

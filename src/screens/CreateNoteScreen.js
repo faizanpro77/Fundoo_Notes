@@ -179,7 +179,7 @@ export default class CreateNoteScreen extends Component {
                 height={235}
                 duration={1}>
                     <TouchableOpacity>
-                        <Image source={require()}/>
+                        {/* <Image source={require()}/> */}
                     </TouchableOpacity>
               
             </RBSheet>
