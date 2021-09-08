@@ -64,5 +64,4 @@ export const getNotes = async() => {
   //  console.log("res in note,,,,,,", noteList)
     return noteList;
   }
-  
 

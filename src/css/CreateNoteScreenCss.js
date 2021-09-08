@@ -1,15 +1,22 @@
 import { StyleSheet } from 'react-native';
 //import { Button } from 'react-native-elements/dist/buttons/Button';
+
+// export function passcolordata(color){
+// var color1=color
+// console.log('ccccccccccccccccccc',color1)
+
+// }
+
 const EditeNoteScreenCss = StyleSheet.create({
-container1:{
-height:'100%',
-width:'100%'
-},
+// container1:{
+// height:'100%',
+// width:'100%',
+// //backgroundColor:color1
+// },
     container2:{
         flexDirection:'row',
         marginVertical: 20, 
         height:30,
-     // borderWidth:1
         },
         backArrowpic:{
             height:25,
