@@ -38,7 +38,7 @@ export const noteData = async (title, description) => {
 
 //getNotes for user authentication
 
-export const getNotes = async() => {
+export const getNotes = async(callback) => {
   try {
     var emialdatavalue = await AsyncStorage.getItem('Email');
     console.log('async..........', emialdatavalue);
@@ -64,6 +64,6 @@ export const getNotes = async() => {
       return error;
     });
     console.log("res in note,,,,,,", noteList)
-    return  noteList
+    return callback(noteList)
    }
 
