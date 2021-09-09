@@ -28,8 +28,8 @@ export default class ColorChager extends Component {
   }
 
   handleColor (color) {
-    this.setState({ color:color},);
-   this.props.colorDataProps(color)
+    this.setState({ color:color},this.props.colorDataProps(color));
+   
   }
 
   render() {

@@ -44,6 +44,11 @@ const EditeNoteScreenCss = StyleSheet.create({
           marginLeft:22 
 
         },
+        deletepic : {
+        height:20,
+        width:20,
+        margin:15,
+        },
       titleinputtxt:{
           
        // height:45,
@@ -83,7 +88,9 @@ const EditeNoteScreenCss = StyleSheet.create({
           height:25,
           width:25,
           marginLeft:'79%'
-      }
+      },
+     
+
 
 
 

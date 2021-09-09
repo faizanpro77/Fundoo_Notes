@@ -69,3 +69,4 @@ class ForgotPasswordScreen extends React.Component {
 }
 
 export default ForgotPasswordScreen
+

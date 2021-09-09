@@ -35,7 +35,7 @@ export default function DashboardCard(props) {
         let gridView = {width: 166,borderRadius:10, backgroundColor: 'red',backgroundColor:note._data.Colour};
                
         let listView = {width:360, borderRadius:10,backgroundColor:'red',backgroundColor:note._data.Colour}  
-    
+        if(note._data.Trash == false && note._data.Archive == false&& note._data.Pin == false) 
         return (
           <View>
             <Card containerStyle={props.gridListdata? gridView:listView}>

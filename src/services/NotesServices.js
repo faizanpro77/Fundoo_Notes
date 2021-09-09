@@ -1,8 +1,8 @@
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-//add title , notes and email to firebase
-export const noteData = async (title, description,color) => {
+//add title , notes ,clour,email,trash to firebase
+export const noteData = async (title, description,color,trash,pin,archive) => {
  
   let response;
 
@@ -17,7 +17,10 @@ export const noteData = async (title, description,color) => {
     Emial: value,
     Title: title,
     Description: description,
-    Colour:color
+    Colour:color,
+    Trash:trash,
+    Pin:pin,
+    Archive:archive
   };
 
   await firestore()
