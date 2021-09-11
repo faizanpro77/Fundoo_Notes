@@ -7,6 +7,7 @@ import ForgotPasswordScreen from '../screens/ForgotPasswordSceen';
 import DashBoardScreen from '../screens/DashBoardScreen';
 import ResetPasswordScreen from '../screens/ResetPasswordScreen';
 import CreateNoteScreen from '../screens/CreateNoteScreen';
+import EditNoteScreen from '../screens/EditNoteScreen';
 
 const Stack = createNativeStackNavigator();//screen and navigator
 
@@ -21,6 +22,7 @@ const StackNavigation = () => {
                 <Stack.Screen name='DashBoard' component={DashBoardScreen}/>
                 <Stack.Screen name='ResetPassword' component={ResetPasswordScreen}/>
                 <Stack.Screen name='CreateNote'   component={CreateNoteScreen}/>
+                <Stack.Screen name='EditNOte' component={EditNoteScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     )

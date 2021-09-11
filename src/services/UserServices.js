@@ -1,5 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 
+//add data after signup into firebase
 export function signUp(signUPData) {
   firestore()
     .collection('Users')
@@ -14,6 +15,7 @@ export function signUp(signUPData) {
     });
 }
 
+//get email and password for user authentication at signIn time
 export async function signIn(emailData, PasswordData) {
   if (emailData != '') {
     // console.log('emailData = ',emailData)
@@ -76,6 +78,7 @@ export async function CheckEmail(emialdata1) {
   }
 }
 
+//update password
 export async function updatePassword(newPassword) {
   let updatesuccess = 'success';
   let updatefail = 'fail';
@@ -98,4 +101,5 @@ export async function updatePassword(newPassword) {
 
   return updateresponse;
 }
+
 

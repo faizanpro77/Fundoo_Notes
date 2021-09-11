@@ -1,11 +1,15 @@
 import React, {Component, useEffect, useState} from 'react';
 import {Card} from 'react-native-elements';
-import {ScrollView, Text, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 //import DashBoardCardCss from '../css/DashBoardCardCss';
 import {getNotes} from '../services/NotesServices';
+import { useNavigation } from '@react-navigation/native';
+import { normalizeText } from 'react-native-elements/dist/helpers';
+
 
 export default function DashboardCard(props) {
   const [notes, setNotes] = useState([]);
+  const[displayNoteData,setdisplayNoteData]= useState([]);
 //console.log('pporpssssssssssss',props.gridListdata)
  
   useEffect(() => {
@@ -14,6 +18,8 @@ export default function DashboardCard(props) {
     });
    // console.log('arrayuseeffectkkkkkkkkkkk', notes);
   }, []);
+
+  const navigation= useNavigation();
 
   return (
   
@@ -37,11 +43,13 @@ export default function DashboardCard(props) {
         let listView = {width:360, borderRadius:10,backgroundColor:'red',backgroundColor:note._data.Colour}  
         if(note._data.Trash == false && note._data.Archive == false&& note._data.Pin == false) 
         return (
-          <View>
-            <Card containerStyle={props.gridListdata? gridView:listView}>
+          <View key={note.id} >
+            <TouchableOpacity onPress={() => {navigation.navigate('EditNOte',{displayNoteData:note, key:note.id})}} > 
+            <Card containerStyle={props.gridListdata? gridView:listView} >
               <Card.Title>{note._data.Title}</Card.Title>
               <Text>{note._data.Description} </Text>
             </Card>
+            </TouchableOpacity>
           </View>
         );
       })}
@@ -49,3 +57,5 @@ export default function DashboardCard(props) {
     
   );
 }
+
+

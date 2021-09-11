@@ -68,4 +68,30 @@ export const getNotes = async() => {
     return noteList;
   }
   
+//update note data 
 
+export const editNoteDataUpdate = (key,title, description,color,trash,pin,archive) => {
+  let userNoteDataUpdate = {
+    Title: title,
+    Description: description,
+    Colour:color,
+    Trash:trash,
+    Pin:pin,
+    Archive:archive
+  };
+
+  firestore()
+  .collection('notes')
+  .doc(key)
+  .update(userNoteDataUpdate)
+  // .then(data => {
+  //   //console.log('data--------------------', data)
+  //   return (response = 'success');
+  // })
+  // .catch(error => {
+  //   console.log('firebase error update time' + error);
+  //   return error;
+  // });
+  console.log('77777777777',title)
+
+}

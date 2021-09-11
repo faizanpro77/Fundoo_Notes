@@ -1,22 +1,23 @@
 import React, {Component} from 'react';
 import {TouchableOpacity, View, Image, TextInput, Text} from 'react-native';
 import EditeNoteScreenCss, {passcolordata} from '../css/CreateNoteScreenCss';
-import {noteData} from '../services/NotesServices';
+import {editNoteDataUpdate, noteData} from '../services/NotesServices';
 import Snackbar from 'react-native-snackbar';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ColorChager from '../Component/Color';
 import {getNotes} from '../services/NotesServices';
 
-export default class CreateNoteScreen extends Component {
+export default class EditNoteScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: '',
+      title: '', //this.props.navigation.state.params.display,
       description: '',
       color: '',
       trash: false,
       pin: false,
       archive: false,
+      key:''
     };
   }
 
@@ -35,9 +36,9 @@ export default class CreateNoteScreen extends Component {
   };
 
   handleTrash = () => {
-    this.setState({trash: !this.state.trash}, () =>{
+    this.setState({trash: !this.state.trash}, () => {
       console.log('Trashhhhhhhhhhhh', this.state.trash),
-      this.props.navigation.navigate('DashBoard')
+        this.props.navigation.navigate('DashBoard');
     });
   };
 
@@ -60,7 +61,7 @@ export default class CreateNoteScreen extends Component {
   };
 
   //send data to add into firebase
-  backArrow = async () => {
+  backArrow =  () => {
     // console.log('...................'+title)
     // console.log('................'+noteDescription)
     // console.log('pinnnnnnnnnnnnnnnnnnbackarrow', this.state.pin);
@@ -72,7 +73,8 @@ export default class CreateNoteScreen extends Component {
       this.state.description != '' &&
       this.state.color != ''
     )
-      var response = await noteData(
+      var response =  editNoteDataUpdate(
+        this.state.key,
         this.state.title,
         this.state.description,
         this.state.color,
@@ -80,28 +82,47 @@ export default class CreateNoteScreen extends Component {
         this.state.pin,
         this.state.archive,
       );
-    // console.log('responsenotedata***************'+response)
-    if (response == 'success') {
-      Snackbar.show({
-        text: 'note added!',
-        duration: Snackbar.LENGTH_INDEFINITE,
-        action: {
-          text: 'UNDO',
-          textColor: 'green',
-        },
-      });
-      this.props.navigation.navigate('DashBoard');
-    } else {
-      Snackbar.show({
-        text: 'note is not added!',
-        duration: Snackbar.LENGTH_INDEFINITE,
-        action: {
-          text: 'UNDO',
-          textColor: 'green',
-        },
-      });
-    }
+        this.props.navigation.goBack();
+      // console.log('responsenotedata***************'+response)
+    // if (response == 'success') {
+    //   Snackbar.show({
+    //     text: 'note is adit or update!',
+    //     duration: Snackbar.LENGTH_INDEFINITE,
+    //     action: {
+    //       text: 'UNDO',
+    //       textColor: 'green',
+    //     },
+    //   });
+    //   this.props.navigation.navigate('DashBoard');
+    // } else {
+    //   Snackbar.show({
+    //     text: 'note is adit or update!',
+    //     duration: Snackbar.LENGTH_INDEFINITE,
+    //     action: {
+    //       text: 'UNDO',
+    //       textColor: 'green',
+    //     },
+    //   });
+    // }
   };
+
+  componentDidMount() {
+    const {displayNoteData, key} = this.props.route.params;
+    // this.setState({}, () => {
+    //   console.log('titleeeeeeeeeeee', this.state.title);
+    // });
+
+    this.setState({
+      key:key,
+      title: displayNoteData._data.Title,
+      color: displayNoteData._data.Colour,
+      description: displayNoteData._data.Description,
+      pin: displayNoteData._data.Pin,
+      archive: displayNoteData._data.Archive,
+      trash: displayNoteData._data.Trash,
+    },()=>console.log('notedataaaaaa',displayNoteData._data.Title));
+    console.log('keyyyyyyyyyy',key)
+  }
 
   render() {
     return (
@@ -166,6 +187,7 @@ export default class CreateNoteScreen extends Component {
             numberOfLines={1}
             maxLength={100}
             onChangeText={this.handleTitle}
+            value={this.state.title}
           />
 
           <TextInput
@@ -174,6 +196,7 @@ export default class CreateNoteScreen extends Component {
             placeholder="Note"
             style={EditeNoteScreenCss.noteinputtext}
             onChangeText={this.handleNoteDescription}
+            value={this.state.description}
           />
         </View>
 
