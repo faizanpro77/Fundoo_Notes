@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, TextInput, Button, TouchableOpacity, Image } fr
 import styles from '../css/SignUpcss';
 import Global from '../css/Global';
 import { signUp } from '../services/UserServices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createImagecolleciton } from '../services/NotesServices';
 
 class SignUpSceen extends Component {
     constructor(props) {
@@ -27,7 +29,7 @@ class SignUpSceen extends Component {
 
     validateFirstName = (val) => {
         this.setState({firstName:val});
-         this.setState({ firstName:val})
+        // this.setState({ firstName:val})
         let rjx = /^[A-Z][a-z]{1,}$/
         let isValid = rjx.test(val)
         if (!isValid)
@@ -79,8 +81,31 @@ class SignUpSceen extends Component {
         }
 
       let response = signUp(signUpData)
+      this.AsyncStoragedata();
+      createImagecolleciton()
     }
 
+
+
+    //   AsyncStoragedata = async()=>{
+    //      console.log('hello')
+    //     try{
+    //       await AsyncStorage.setItem('Email',this.state.Email)
+    //     }catch(err){
+    //       console.log(err)
+    
+    //     }
+    //   }
+
+    AsyncStoragedata = async() =>{
+        try{
+        await AsyncStorage.setItem('Email',this.state.Email)
+        await AsyncStorage.setItem('firstName',this.state.firstName)
+        await AsyncStorage.setItem('lastName',this.state.lastName)
+        }catch(err){
+            console.log(err);
+        }
+    }
 
     render() {
         return (

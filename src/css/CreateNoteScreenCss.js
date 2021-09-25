@@ -26,28 +26,31 @@ const EditeNoteScreenCss = StyleSheet.create({
         pinpic:{
             height:25,
             width:25,
-            marginLeft:219 
-
-            
+            //marginLeft:219 
         },
         reminderpluspic:{
             height:25,
             width:25,
            // left:240 
-           marginLeft:22
+         //  marginLeft:22
 
             
         },
         archivepic:{
             height:25,
             width:25,
-          marginLeft:22 
+         // marginLeft:22 
 
         },
         deletepic : {
         height:20,
         width:20,
         margin:15,
+        },
+        lebelpic:{
+            height:20,
+            width:25,
+            marginLeft:15
         },
       titleinputtxt:{
           

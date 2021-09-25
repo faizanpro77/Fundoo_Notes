@@ -1,25 +1,61 @@
 import React, {Component} from 'react';
+//import { DrawerActions} from '@react-navigation/native';
+import RBSheet from 'react-native-raw-bottom-sheet';
 import {Card} from 'react-native-elements';
 import {
   View,
   Text,
   TouchableOpacity,
   Image,
-  TouchableHighlight,
   ScrollView,
 } from 'react-native';
-import {gridlistvalue} from '../Component/DashboardCard';
+// import {gridlistvalue} from '../Component/DashboardCard';
 import DashBoardCss from '../css/DashBoardCss';
 import DashboardCard from '../Component/DashboardCard';
+import Profile from '../Component/Profile';
+import { TextInput } from 'react-native-gesture-handler';
+import { getNotes, getUserProfileImage1 } from '../services/NotesServices';
+import { NodePath } from '@babel/traverse';
+import {Avatar} from 'react-native-elements';
 
 class DashBoardScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       open: false,
-      strinff: 'fdjjfkslgj',
+    searchText:'',
+    filterSearch:false,
+    notesdata:[],
+    filterArray:[],
+    note:[],
+    isSearching:false,
+    searchText: '',
+    note: [],
+    filterArr: [],
+    userprofile:'https://www.w3schools.com/howto/img_avatar.png'
     };
   }
+ 
+  // componentDidMount(){
+  
+  //  // this.focusListener = this.props.navigation.addListener('focus', () => {
+    
+  //    ()=>{  getNotes().then(res => {
+  //         this.setState({notes:res},console.log('notesssssssssssssssssss',this.state.notes));
+  //        });
+  //        console.log('ssssssssss',this.state.notes);
+  //   //  });
+  //       }
+  // }
+
+//   componentDidMount() {
+//     getNotes().then((res) => {
+//         this.setState({
+//             note: res
+//         })
+//     })
+// }
+
 
   gridView = () => {
     this.setState({
@@ -27,16 +63,65 @@ class DashBoardScreen extends Component {
     });
   };
 
-  // gridView = () =>{
-  //   this.setState({
-  //     open:!this.state.open
-  //   })
-
-  // }
-
   navigateCreateNOteScreen = () => {
     this.props.navigation.navigate('CreateNote');
   };
+
+async componentDidMount(){
+  let userprofile1 = await getUserProfileImage1()
+  this.setState({userprofile:userprofile1})
+ // console.log(' this.state.profielbbbbbbbbbbb', this.state.userprofile);
+}
+
+
+
+
+  /****************************************** */
+  // finalArray = isSearching? note: filterArray
+
+  //    filterSearch =(text) =>{
+  //   console.log('texttttttt',text);
+  //      let NoteData = [];
+  //     if (text.toString().length >=1) {
+          
+  //       //  var noteData =this.state.notes1.map((note) => {
+  //         var noteData = Object.keys(notes1).map((note) => {
+
+  //            var key = note;
+  //            NoteData.push(notes1[key]);
+  //            const newData = NoteData.reduce(function(item,option) {
+  //            if (option.Title.includes(text)) {
+  //                console.log('....',option.Title)
+  //                setIsSearching(true);
+  //                this.setState({isSearching:true})
+  //                NoteData.push(option)
+  //                this.state({filterArray:NoteData})
+  //            }
+  //                // return item.Title.includes(text.toLowerCase()) || item.Note.toLowerCase().contains(text.toLowerCase());
+          
+  //            },[]);
+             
+  //         })
+  //     }else{
+  //         setIsSearching(false)
+  //     }
+ 
+ 
+  // }
+  /****************************************** */
+  
+
+
+
+  /******************************************/
+
+handlesearch=()=>{
+  this.props.navigation.navigate('SearchNote')
+}
+
+// profileProps=(imageData)=>{
+// console.log('imageDataaaaaaa',imageData);
+// }
 
   render() {
     return (
@@ -46,7 +131,8 @@ class DashBoardScreen extends Component {
             <View style={DashBoardCss.navBar}>
               <View style={{flexDirection: 'row'}}>
                 <View style={DashBoardCss.menueImgview}>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => this.props.navigation.openDrawer()}>
                     <Image
                       style={DashBoardCss.menueImg}
                       source={require('../Assets/icons/menu.png')}
@@ -54,7 +140,7 @@ class DashBoardScreen extends Component {
                   </TouchableOpacity>
                 </View>
                 <View>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={this.handlesearch}>
                     <Text>Search your notes</Text>
                   </TouchableOpacity>
                 </View>
@@ -82,22 +168,30 @@ class DashBoardScreen extends Component {
                 )}
 
                 <View>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => this.RBSheet.open()}>
                     <Image
                       style={DashBoardCss.profileImg}
-                      source={require('../Assets/icons/profile.png')}
+                      source={{uri:this.state.userprofile}}
                     />
                   </TouchableOpacity>
+                  <RBSheet
+                    ref={ref => {
+                      this.RBSheet = ref;
+                    }}
+                    height={235}>
+                      <Profile  />
+                      {/* profileUserData={this.profileProps} */}
+                  </RBSheet>
                 </View>
               </View>
             </View>
           </Card>
         </View>
-       
-        <ScrollView style={{marginBottom:60}}>
-          <DashboardCard gridListdata={this.state.open} />
+
+        <ScrollView style={{marginBottom: 60}}>
+          <DashboardCard gridListdata={this.state.open} seachNoteData={this.state.searchText} />
         </ScrollView>
-       
+
         <View style={DashBoardCss.footerContainer}>
           <View style={DashBoardCss.footer}>
             <View>
@@ -153,3 +247,4 @@ class DashBoardScreen extends Component {
 }
 
 export default DashBoardScreen;
+

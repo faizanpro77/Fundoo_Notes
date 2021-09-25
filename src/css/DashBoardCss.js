@@ -42,6 +42,7 @@ const DashBoardCss = StyleSheet.create({
   profileImg: {
     height: 25,
     width: 25,
+    borderRadius:20
   },
 
   listprofileview: {

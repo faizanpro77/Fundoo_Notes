@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {TouchableOpacity, View, Image, TextInput, Text} from 'react-native';
 import EditeNoteScreenCss, {passcolordata} from '../css/CreateNoteScreenCss';
-import {noteData} from '../services/NotesServices';
+import {getLabel, noteData} from '../services/NotesServices';
 import Snackbar from 'react-native-snackbar';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ColorChager from '../Component/Color';
@@ -17,14 +17,24 @@ export default class CreateNoteScreen extends Component {
       trash: false,
       pin: false,
       archive: false,
+      labelDataArr:[],
+      
     };
+    
   }
+
+   
+  handleLabel = () => {
+    this.props.navigation.navigate('createLabel');
+  };
 
   //handle archive true false and nevigat dashbord
   handleArchive = () => {
     this.setState({archive: !this.state.archive}, () => {
-      console.log('archiveeeeeeeee', this.state.archive),
-        this.props.navigation.navigate('DashBoard');
+      console.log('archiveeeeeeeee', this.state.archive);
+      // console.warn('archiveeeeeeeee', this.state.archive)
+
+      // this.props.navigation.navigate('DashBoard');
     });
   };
 
@@ -35,9 +45,9 @@ export default class CreateNoteScreen extends Component {
   };
 
   handleTrash = () => {
-    this.setState({trash: !this.state.trash}, () =>{
-      console.log('Trashhhhhhhhhhhh', this.state.trash),
-      this.props.navigation.navigate('DashBoard')
+    this.setState({trash: !this.state.trash}, () => {
+      console.log('Trashhhhhhhhhhhh', this.state.trash);
+      //this.props.navigation.navigate('DashBoard')
     });
   };
 
@@ -59,8 +69,11 @@ export default class CreateNoteScreen extends Component {
     });
   };
 
+  
   //send data to add into firebase
-  backArrow = async () => {
+  backArrow = async (addLabelDataArr) => {
+    console.log('addLabelDataArrrrrrrrrrrrrrr',addLabelDataArr);
+
     // console.log('...................'+title)
     // console.log('................'+noteDescription)
     // console.log('pinnnnnnnnnnnnnnnnnnbackarrow', this.state.pin);
@@ -71,7 +84,8 @@ export default class CreateNoteScreen extends Component {
       this.state.title != '' &&
       this.state.description != '' &&
       this.state.color != ''
-    )
+    ){
+
       var response = await noteData(
         this.state.title,
         this.state.description,
@@ -79,8 +93,9 @@ export default class CreateNoteScreen extends Component {
         this.state.trash,
         this.state.pin,
         this.state.archive,
-      );
-    // console.log('responsenotedata***************'+response)
+        addLabelDataArr1
+      )}
+    console.log('responsenotedata***************' + response);
     if (response == 'success') {
       Snackbar.show({
         text: 'note added!',
@@ -103,7 +118,27 @@ export default class CreateNoteScreen extends Component {
     }
   };
 
+  componentDidMount(){
+
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      
+      getLabel().then(res=>{
+      this.setState({labelDataArr:res})
+    })
+  })
+
+  }
+
+ 
+
+
   render() {
+    // const {LabbelArr} = this.props.route.params;
+    // console.log('44444444444',LabbelArr);
+  
+
+    var addLabelDataArr=[]
+
     return (
       // <View style={EditeNoteScreenCss.container1}>
       <View
@@ -114,7 +149,7 @@ export default class CreateNoteScreen extends Component {
         }}>
         <View style={EditeNoteScreenCss.container2}>
           <View>
-            <TouchableOpacity onPress={this.backArrow}>
+            <TouchableOpacity onPress={(event)=>this.backArrow(addLabelDataArr)}>
               <Image
                 style={EditeNoteScreenCss.backArrowpic}
                 source={require('../Assets/icons/backArrow.png')}
@@ -122,7 +157,7 @@ export default class CreateNoteScreen extends Component {
             </TouchableOpacity>
           </View>
 
-          <View>
+          <View style={{marginLeft: 219}}>
             {this.state.pin ? (
               <TouchableOpacity onPress={this.handlePin}>
                 <Image
@@ -140,7 +175,7 @@ export default class CreateNoteScreen extends Component {
             )}
           </View>
 
-          <View>
+          <View style={{marginLeft: 22}}>
             <TouchableOpacity>
               <Image
                 style={EditeNoteScreenCss.reminderpluspic}
@@ -149,7 +184,7 @@ export default class CreateNoteScreen extends Component {
             </TouchableOpacity>
           </View>
 
-          <View>
+          <View style={{marginLeft: 22}}>
             <TouchableOpacity onPress={this.handleArchive}>
               <Image
                 style={EditeNoteScreenCss.archivepic}
@@ -175,8 +210,45 @@ export default class CreateNoteScreen extends Component {
             style={EditeNoteScreenCss.noteinputtext}
             onChangeText={this.handleNoteDescription}
           />
-        </View>
+         
+        
 
+
+        </View>
+{/***************************************************************** */}
+<View  style={{ flexWrap: 'wrap', marginLeft:12,flexDirection:'row', marginRight: 10,}}>
+{     
+
+      
+ this.state.labelDataArr.map(labelData=>{
+  if(labelData._data.CheckBox===true){
+    addLabelDataArr.push(labelData._data.Label)
+   
+   
+
+  console.log('============================>>',addLabelDataArr);
+          return(
+       <View key={labelData.id}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'gray',
+                borderRadius: 20,
+                justifyContent: 'center',
+                padding:5,
+                marginRight:5
+                
+               
+              }}>
+              <Text>
+              {labelData._data.Label}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          )}
+  })}
+
+</View>
+       
         <View style={EditeNoteScreenCss.footerContainer}>
           <View style={EditeNoteScreenCss.footer}>
             <TouchableOpacity>
@@ -221,6 +293,16 @@ export default class CreateNoteScreen extends Component {
                     style={EditeNoteScreenCss.deletepic}
                   />
                   <Text style={{top: 15, marginLeft: 20}}>Delete</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={this.handleLabel}>
+                <View style={{flexDirection: 'row'}}>
+                  <Image
+                    source={require('../Assets/icons/label1.png')}
+                    style={EditeNoteScreenCss.lebelpic}
+                  />
+                  <Text style={{marginLeft: 30}}>Label</Text>
                 </View>
               </TouchableOpacity>
             </RBSheet>

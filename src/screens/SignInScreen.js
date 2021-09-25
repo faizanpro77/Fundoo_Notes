@@ -55,7 +55,8 @@ class SignInScreen extends Component {
         let response = await signIn(this.state.Email, this.state.Password)
 
             if(response == 'success'){
-
+                var emialdatavalue =  await AsyncStorage.getItem('Email');
+                 console.log('asyncccccccc..........', emialdatavalue);
         Snackbar.show({
             text: 'login successfully',
             duration: Snackbar.LENGTH_INDEFINITE,
@@ -65,7 +66,7 @@ class SignInScreen extends Component {
             },
         });
         this.props.navigation.navigate('DashBoard')
-        this.AsyncStoragedata();
+      //  this.AsyncStoragedata();
 
     } else {
             Snackbar.show({
@@ -78,15 +79,15 @@ class SignInScreen extends Component {
 
     }
 
-      AsyncStoragedata = async()=>{
-         console.log('hello')
-        try{
-          await AsyncStorage.setItem('Email',this.state.Email)
-        }catch(err){
-          console.log(err)
+    //   AsyncStoragedata = async()=>{
+    //      console.log('hello')
+    //     try{
+    //       await AsyncStorage.setItem('Email',this.state.Email)
+    //     }catch(err){
+    //       console.log(err)
     
-        }
-      }
+    //     }
+    //   }
     
 
 

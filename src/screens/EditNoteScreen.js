@@ -107,11 +107,20 @@ export default class EditNoteScreen extends Component {
   };
 
   componentDidMount() {
-    const {displayNoteData, key} = this.props.route.params;
-    // this.setState({}, () => {
-    //   console.log('titleeeeeeeeeeee', this.state.title);
-    // });
+    const {displayNoteData, key,searchOpen} = this.props.route.params;
+   if(searchOpen){
+    this.setState({
+      key:key,
+      title: displayNoteData.Title,
+      color: displayNoteData.Colour,
+      description: displayNoteData.Description,
+      pin: displayNoteData.Pin,
+      archive: displayNoteData.Archive,
+      trash: displayNoteData.Trash,
+    },()=>console.log('notedataaaaaa',displayNoteData.Title));
+    //console.log('keyyyyyyyyyy',key)
 
+   }else{
     this.setState({
       key:key,
       title: displayNoteData._data.Title,
@@ -121,7 +130,8 @@ export default class EditNoteScreen extends Component {
       archive: displayNoteData._data.Archive,
       trash: displayNoteData._data.Trash,
     },()=>console.log('notedataaaaaa',displayNoteData._data.Title));
-    console.log('keyyyyyyyyyy',key)
+    //console.log('keyyyyyyyyyy',key)
+  }
   }
 
   render() {
@@ -143,7 +153,7 @@ export default class EditNoteScreen extends Component {
             </TouchableOpacity>
           </View>
 
-          <View>
+          <View style={{marginLeft:219}}>
             {this.state.pin ? (
               <TouchableOpacity onPress={this.handlePin}>
                 <Image
@@ -161,7 +171,7 @@ export default class EditNoteScreen extends Component {
             )}
           </View>
 
-          <View>
+          <View style={{marginLeft:22}}>
             <TouchableOpacity>
               <Image
                 style={EditeNoteScreenCss.reminderpluspic}
@@ -170,7 +180,7 @@ export default class EditNoteScreen extends Component {
             </TouchableOpacity>
           </View>
 
-          <View>
+          <View style={{marginLeft:22}}>
             <TouchableOpacity onPress={this.handleArchive}>
               <Image
                 style={EditeNoteScreenCss.archivepic}
