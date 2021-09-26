@@ -31,6 +31,8 @@ setNotes(props.searchDataArr)
         }}>
         
       {props.searchDataArr.map(note => {
+               // console.log('newiffffffffffffffffffffffffffff',note.id);
+
           // console.log('noteeeeeeeeeeeeeeeeee',note);
           let gridView = {width: 166,borderRadius:10, backgroundColor: 'red',backgroundColor:note.Colour};
                

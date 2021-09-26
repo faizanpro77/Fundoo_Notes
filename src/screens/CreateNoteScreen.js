@@ -18,6 +18,10 @@ export default class CreateNoteScreen extends Component {
       pin: false,
       archive: false,
       labelDataArr:[],
+      doll:[],
+      onLoad:false,
+      onLoad11:false,
+     
       
     };
     
@@ -25,6 +29,7 @@ export default class CreateNoteScreen extends Component {
 
    
   handleLabel = () => {
+    
     this.props.navigation.navigate('createLabel');
   };
 
@@ -72,7 +77,7 @@ export default class CreateNoteScreen extends Component {
   
   //send data to add into firebase
   backArrow = async (addLabelDataArr) => {
-    console.log('addLabelDataArrrrrrrrrrrrrrr',addLabelDataArr);
+   // console.log('addLabelDataArrrrrrrrrrrrrrr',addLabelDataArr);
 
     // console.log('...................'+title)
     // console.log('................'+noteDescription)
@@ -93,9 +98,9 @@ export default class CreateNoteScreen extends Component {
         this.state.trash,
         this.state.pin,
         this.state.archive,
-        addLabelDataArr1
+        this.state.labelDataArr
       )}
-    console.log('responsenotedata***************' + response);
+   // console.log('responsenotedata***************' + response);
     if (response == 'success') {
       Snackbar.show({
         text: 'note added!',
@@ -118,26 +123,37 @@ export default class CreateNoteScreen extends Component {
     }
   };
 
+  
   componentDidMount(){
+    
+    //this.focusListener = this.props.navigation.addListener('focus', function() {
+    
+    
+  //})
 
-    this.focusListener = this.props.navigation.addListener('focus', () => {
+  }
+
+  componentDidUpdate(){
+        this.focusListener = this.props.navigation.addListener('focus',()=>{
+        const { LabbelArr}=this.props.route.params
+
+   // console.log('0000000000000000000000000000',labeldataParam);
+    //if(!this.state.onLoad){     //!this.state.onLoad
+      this.setState({onLoad:true})
       
-      getLabel().then(res=>{
-      this.setState({labelDataArr:res})
-    })
+   //  console.log('LabbelArrrrrrrrrrrrrrrrrrrrrr',LabbelArr )
+       this.setState({labelDataArr:LabbelArr})
+
+    //}
   })
 
   }
 
- 
 
 
   render() {
-    // const {LabbelArr} = this.props.route.params;
-    // console.log('44444444444',LabbelArr);
-  
-
-    var addLabelDataArr=[]
+     // LabbelArr=[]
+        var addLabelDataArr=[]
 
     return (
       // <View style={EditeNoteScreenCss.container1}>
@@ -216,17 +232,13 @@ export default class CreateNoteScreen extends Component {
 
         </View>
 {/***************************************************************** */}
-<View  style={{ flexWrap: 'wrap', marginLeft:12,flexDirection:'row', marginRight: 10,}}>
+<View  style={{ flexWrap: 'wrap', marginLeft:12,flexDirection:'row', marginRight: 10,}} key={this.state.labelDataArr.id}>
 {     
 
       
- this.state.labelDataArr.map(labelData=>{
-  if(labelData._data.CheckBox===true){
-    addLabelDataArr.push(labelData._data.Label)
-   
-   
-
-  console.log('============================>>',addLabelDataArr);
+this.state.labelDataArr.map(labelData=>{
+  
+  //console.log('============================>>',addLabelDataArr);
           return(
        <View key={labelData.id}>
             <TouchableOpacity
@@ -240,12 +252,12 @@ export default class CreateNoteScreen extends Component {
                
               }}>
               <Text>
-              {labelData._data.Label}
+              {labelData}
               </Text>
             </TouchableOpacity>
           </View>
           )}
-  })}
+  )}
 
 </View>
        
@@ -274,7 +286,7 @@ export default class CreateNoteScreen extends Component {
               <ColorChager colorDataProps={this.colorHandler} />
             </RBSheet>
 
-            <TouchableOpacity onPress={() => this.RBSheetMore.open()}>
+            <TouchableOpacity onPress={() => this.RBSheetMore.open()}>  
               <Image
                 style={EditeNoteScreenCss.threedotmenue}
                 source={require('../Assets/icons/threedotmenue.png')}

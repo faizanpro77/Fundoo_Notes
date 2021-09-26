@@ -153,6 +153,7 @@ await firestore()
 .then(value=>{
   value.forEach(labelData =>{
     LabelList.push(labelData)
+   // console.log('7777777777777777 label get successful')
   })
 })
 .catch(error=>{
@@ -172,34 +173,8 @@ export const updateCheck = async(key,checkValue) => {
  .collection('Label')
  .doc(key)
  .update(label)
+// .then(data=>{console.log('dataupdateeeeeeeeeeeeee',data)})
 }
-
-export const getUserProfileImage1 = async () => {
-  var profileImg
-  var asyncemail = await AsyncStorage.getItem('Email');
- // console.log('asyncemailllllllllll', asyncemail);
-  const currentUser = await firestore()
-    .collection('profile')
-    .where('Email', '==', asyncemail)
-    .get()
-    .then(data => {
-    //  console.log('888888888888', data);
-
-      data.docs.forEach(doc => {
-        var docdata = doc.exists;
-
-       // console.log('fppppppppppp', doc);
-        //console.log('????????????', doc.data());
-      //  setUserData(doc.data());
-        //console.log('doccccccccccccccccccc',doc.data());
-        //setImage(doc.data().Image);
-        return profileImg = doc.data().Image
-
-
-      });
-    });
-    return profileImg
-};
 
 export const createImagecolleciton = async() => {
     var asyncemail = await AsyncStorage.getItem('Email');
@@ -228,5 +203,55 @@ export const createImagecolleciton = async() => {
         Alert.alert('Your profile has been updated successfully.');
       })
       .catch(error => console.log( error));
+
+  }
+
+
+
+  export const getNotesDataWithId = async () => {
+    try {
+      var emialdatavalue = await AsyncStorage.getItem('Email');
+      // console.log('async..........', emialdatavalue);
+    } catch (err) {
+      console.log(err);
+    }
+  
+    var noteList = [];
+  
+    await firestore()
+      .collection('notes')
+      .where('Emial', '==', emialdatavalue)
+      .get()
+      .then(value => {
+        value.forEach(doc => {
+          const data = doc.data();
+          data.id=doc.id
+          noteList.push(data);
+
+        });
+      })
+      .catch(error => {
+        console.log('...........', error);
+        return error;
+      });
+  
+    return noteList;
+  };
+  
+  export const setAllCheckBoxValueFalse =()=>{
+
+    const ORDER_ITEMS = firestore().collection('Label')
+
+    ORDER_ITEMS.where('CheckBox', '==', true)
+      .get()
+      .then(snapshots => {
+        if (snapshots.size > 0) {
+          snapshots.forEach(orderItem => {
+            ORDER_ITEMS.doc(orderItem.id).update({ CheckBox: false })
+          // .then(console.log('77777777777777777success checkboc'))
+          })
+        }
+      })
+    
 
   }

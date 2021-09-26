@@ -82,7 +82,7 @@ export default class EditNoteScreen extends Component {
         this.state.pin,
         this.state.archive,
       );
-        this.props.navigation.goBack();
+        this.props.navigation.navigate('DashBoard');  //goBack()
       // console.log('responsenotedata***************'+response)
     // if (response == 'success') {
     //   Snackbar.show({
@@ -109,6 +109,9 @@ export default class EditNoteScreen extends Component {
   componentDidMount() {
     const {displayNoteData, key,searchOpen} = this.props.route.params;
    if(searchOpen){
+
+    //console.log('keyyyyyyyyyyyyyyyyyy',key);
+    //console.log('searchOpennnnnnnnnnnnnnnnnnnn',searchOpen);
     this.setState({
       key:key,
       title: displayNoteData.Title,

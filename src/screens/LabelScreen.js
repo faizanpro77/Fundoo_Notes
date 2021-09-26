@@ -4,6 +4,8 @@ import LabelCss from '../css/LabelScreenCss';
 import CheckBox, {CheckBoxBase} from '@react-native-community/checkbox';
 import {addLabel, getLabel, updateCheck} from '../services/NotesServices';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
+
 //import { CheckBox } from 'react-native-elements'
 
 export default function LabelScreen() {
@@ -11,6 +13,7 @@ export default function LabelScreen() {
   const [labelArray, setlabelArray] = useState([]);
   const [checked, setChecked] = useState(false);
   const[LabbelArr,setLabbelArr] = useState([])
+  
   //console.log('checked1',checked);
 
   var addLabelIntoFirbase = async () => {
@@ -20,8 +23,28 @@ export default function LabelScreen() {
     });
   };
 
+  var labelForCreateScreen=()=>{
+   let filterLabelArray=[]
+    labelArray.map(
+      filterlabel=>{
+        if(filterlabel._data.CheckBox===true){
+          filterLabelArray.push(filterlabel._data.Label)
+        }
+
+      }
+    )
+       //  console.log('filterlabelllllllllllllllllllllll',filterLabelArray);
+
+    navigation.navigate('CreateNote',{LabbelArr:filterLabelArray})
+  }
+
   const updadateidvalue = (id,newValue) => {
       updateCheck(id,newValue)
+
+      getLabel().then(res => {
+        setlabelArray(res);
+      });
+
    }
 
   useEffect(() => {
@@ -40,7 +63,7 @@ const navigation = useNavigation()
       <View style={LabelCss.container2}>
         <View style={LabelCss.arrowinputlabel}>
           
-          <TouchableOpacity onPress={()=>{navigation.navigate('CreateNote',{LabbelArr:'LabbelArr'})}}>
+          <TouchableOpacity onPress={labelForCreateScreen}>
           <Image
             style={LabelCss.arrowpic}
             source={require('../Assets/icons/backArrow.png')}
@@ -74,7 +97,7 @@ const navigation = useNavigation()
             {/* {console.log('labelArrayyyyyyyyyyyyy',labelArray)} */}
           {labelArray.map(label => {
             
-            // console.log('labelllllllllll',label);
+           //  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@2',label);
             return (
               <View key={label.id} style={LabelCss.labeltxtcheckView}>
                 <Image
@@ -88,8 +111,8 @@ const navigation = useNavigation()
                 <CheckBox
                   style={{marginLeft: 200}}
                   disabled={false}
-                  value={checked[label.id]}
-
+                  // value={checked[label.id]}
+                  value={label._data.CheckBox}
                   onValueChange={newValue => {
                     // console.log('------------------------',checked['kIsrGMBNr0JKIew29nO7']);
                     // console.log('labelarraooooooooooooo',labelArray);

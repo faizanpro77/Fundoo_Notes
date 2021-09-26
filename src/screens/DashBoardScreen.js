@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {Component} from 'react';
 //import { DrawerActions} from '@react-navigation/native';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -14,7 +15,7 @@ import DashBoardCss from '../css/DashBoardCss';
 import DashboardCard from '../Component/DashboardCard';
 import Profile from '../Component/Profile';
 import { TextInput } from 'react-native-gesture-handler';
-import { getNotes, getUserProfileImage1 } from '../services/NotesServices';
+import { getNotes, setAllCheckBoxValueFalse } from '../services/NotesServices';
 import { NodePath } from '@babel/traverse';
 import {Avatar} from 'react-native-elements';
 
@@ -64,57 +65,26 @@ class DashBoardScreen extends Component {
   };
 
   navigateCreateNOteScreen = () => {
+    setAllCheckBoxValueFalse();
     this.props.navigation.navigate('CreateNote');
   };
 
 async componentDidMount(){
-  let userprofile1 = await getUserProfileImage1()
-  this.setState({userprofile:userprofile1})
- // console.log(' this.state.profielbbbbbbbbbbb', this.state.userprofile);
+ // let userprofile1 = await getUserProfileImage1()
+  let asyimage= await AsyncStorage.getItem('userImage')
+
+  this.setState({userprofile:asyimage})
+ //console.log('asyimageeeeeeeeeee',asyimage);
 }
 
+//  componentWillUnmount(){
+//   let asyimage=  AsyncStorage.getItem('userImage')
 
+//   this.setState({userprofile:asyimage})
+//  console.log('asyimageeeeeeeeeee',asyimage);
 
-
-  /****************************************** */
-  // finalArray = isSearching? note: filterArray
-
-  //    filterSearch =(text) =>{
-  //   console.log('texttttttt',text);
-  //      let NoteData = [];
-  //     if (text.toString().length >=1) {
-          
-  //       //  var noteData =this.state.notes1.map((note) => {
-  //         var noteData = Object.keys(notes1).map((note) => {
-
-  //            var key = note;
-  //            NoteData.push(notes1[key]);
-  //            const newData = NoteData.reduce(function(item,option) {
-  //            if (option.Title.includes(text)) {
-  //                console.log('....',option.Title)
-  //                setIsSearching(true);
-  //                this.setState({isSearching:true})
-  //                NoteData.push(option)
-  //                this.state({filterArray:NoteData})
-  //            }
-  //                // return item.Title.includes(text.toLowerCase()) || item.Note.toLowerCase().contains(text.toLowerCase());
-          
-  //            },[]);
-             
-  //         })
-  //     }else{
-  //         setIsSearching(false)
-  //     }
- 
- 
-  // }
-  /****************************************** */
+// }
   
-
-
-
-  /******************************************/
-
 handlesearch=()=>{
   this.props.navigation.navigate('SearchNote')
 }
@@ -178,7 +148,7 @@ handlesearch=()=>{
                     ref={ref => {
                       this.RBSheet = ref;
                     }}
-                    height={235}>
+                    height={260}>
                       <Profile  />
                       {/* profileUserData={this.profileProps} */}
                   </RBSheet>

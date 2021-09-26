@@ -84,10 +84,14 @@ export default function Profile(props) {
           setUserData(doc.data());
           // console.log('doccccccccccccccccccc',doc.data());
           setImage(doc.data().Image);
-          // console.log('doc.iddddddddddddddddddddddddd',doc.id);
-          setprofileId(doc.id);
+           //console.log('doc.iddddddddddddddddddddddddd',doc.data().Image);
+           let asyncset =   AsyncStorage.setItem('userImage',doc.data().Image)
+
+            setprofileId(doc.id);
         });
       });
+
+                
   };
 
   useEffect(() => {
@@ -135,8 +139,8 @@ export default function Profile(props) {
   };
 
   return (
-    <View style={{flexDirection: 'row'}}>
-      <View style={{marginLeft: 20}}>
+    <View style={{flexDirection:'row'}}>
+      <View style={{marginLeft: 20,}}>
         {image != null ? (
           <TouchableOpacity>
             <Avatar
@@ -149,7 +153,7 @@ export default function Profile(props) {
           </TouchableOpacity>
         ) : null}
       </View>
-      <View style={{flexDirection: 'column', marginLeft: 10}}>
+      <View style={{flexDirection: 'column', marginLeft:40,}}>
         <Text style={{fontWeight: 'bold'}}>
           {asyncFirstName} {asyncLastName}
         </Text>
@@ -199,10 +203,18 @@ export default function Profile(props) {
         <TouchableOpacity
           onPress={uploadimage}
           style={{
-            marginTop: 6,
+            backgroundColor: '#ffa500',
+            height: 35,
+            width: 230,
+            marginTop: 20,
+            borderRadius: 10,
+            justifyContent: 'center',
             alignItems: 'center',
-          }}>
-          <Text style={{fontSize: 17, color: '#ffa500', fontWeight: 'bold'}}>
+            marginTop: 20,
+            alignItems: 'center',
+          }}
+          >
+          <Text style={{fontSize: 17}}>
             Upload
           </Text>
         </TouchableOpacity>
