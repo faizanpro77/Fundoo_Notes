@@ -15,6 +15,7 @@ import ArchiveScreen from '../screens/ArchiveScreen';
 import DeleteScreen from '../screens/DeleteScreen';
 import SearchScreen from '../screens/SearchScreen';
 import SplashScreen from '../screens/SplashScreen';
+import EditeLabelScreen from '../screens/EditeLabelScreen';
 
 const Stack = createNativeStackNavigator();//screen and navigator
 
@@ -33,6 +34,8 @@ const StackNavigation = () => {
                 <Stack.Screen name='EditNOte' component={EditNoteScreen} />
                 <Stack.Screen name='createLabel' component={LabelScreen}/>
                 <Stack.Screen name='SearchNote' component={SearchScreen}/>
+                <Stack.Screen name='EditeLabelScreen' component={EditeLabelScreen}/>
+                
                
             </Stack.Navigator>
         </NavigationContainer>

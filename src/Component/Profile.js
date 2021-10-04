@@ -7,8 +7,7 @@ import {Avatar} from 'react-native-elements';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import DashBoardScreen from '../screens/DashBoardScreen';
-import { handleProfileUpdate } from '../services/NotesServices';
-//import { getUserProfileImage } from '../services/NotesServices';
+import {handleProfileUpdate} from '../services/NotesServices';
 
 export default function Profile(props) {
   const navigation = useNavigation();
@@ -17,14 +16,16 @@ export default function Profile(props) {
   const [asyncFirstName, setasyncFirstName] = useState('');
   const [asyncLastName, setasyncLastName] = useState('');
   const [profileId, setprofileId] = useState('');
-  const [image, setImage] = useState(
+  const [image, setImage] = useState('');
+  const [avtarImage, setAvtarImage] = useState(
     'https://www.w3schools.com/howto/img_avatar.png',
   );
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
   const [userData, setUserData] = useState(null);
-
-  //const task = storageRef.putFile(uploadUri);
+  const [propsImage, setPropsImage] = useState(
+    'https://www.w3schools.com/howto/img_avatar.png',
+  );
 
   const removeAsyncStorage = () => {
     AsyncStorage.clear();
@@ -35,7 +36,6 @@ export default function Profile(props) {
     var asyncEmailValue = await AsyncStorage.getItem('Email');
     var asyncFirstName = await AsyncStorage.getItem('firstName');
     var asyncLastName = await AsyncStorage.getItem('lastName');
-    // console.log('async..........', asyncEmailValue);
 
     setasyncEmail(asyncEmailValue);
     setasyncFirstName(asyncFirstName);
@@ -79,19 +79,13 @@ export default function Profile(props) {
         data.docs.forEach(doc => {
           var docdata = doc.exists;
 
-          // console.log('fppppppppppp', doc);
-          //console.log('????????????', doc.data());
           setUserData(doc.data());
           // console.log('doccccccccccccccccccc',doc.data());
           setImage(doc.data().Image);
-           //console.log('doc.iddddddddddddddddddddddddd',doc.data().Image);
-           let asyncset =   AsyncStorage.setItem('userImage',doc.data().Image)
 
-            setprofileId(doc.id);
+          setprofileId(doc.id);
         });
       });
-
-                
   };
 
   useEffect(() => {
@@ -99,18 +93,11 @@ export default function Profile(props) {
     getUserProfileImage();
   }, []);
 
-
   const handleUpdate = async url => {
-    handleProfileUpdate(url,profileId)
-     };
+    handleProfileUpdate(url, profileId);
+  };
 
-  
   const uploadimage = async () => {
-
-    //console.log('faizan');
-    // if(image = null){
-    //   return null;
-    // }
     const uploadUri = image;
     let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
 
@@ -121,15 +108,13 @@ export default function Profile(props) {
       setImage(null);
 
       const storageRef = storage().ref(filename);
-
       await storage().ref(filename).putFile(uploadUri);
-
       const url = await storageRef.getDownloadURL();
-
-      // console.log('urlllllllllllllllllllll', url);
-      // await createImagecolleciton(url);
       handleUpdate(url);
       setImage(url);
+      let asyncset = AsyncStorage.setItem('userImage', url);
+
+      props.profileImageprops(url);
 
       return url;
     } catch (e) {
@@ -139,21 +124,19 @@ export default function Profile(props) {
   };
 
   return (
-    <View style={{flexDirection:'row'}}>
-      <View style={{marginLeft: 20,}}>
-        {image != null ? (
-          <TouchableOpacity>
-            <Avatar
-              style={{height: 35, width: 35, marginTop: 4}}
-              rounded
-              source={{
-                uri: image,
-              }}
-            />
-          </TouchableOpacity>
-        ) : null}
+    <View style={{flexDirection: 'row'}}>
+      <View style={{marginLeft: 20}}>
+        <TouchableOpacity>
+          <Avatar
+            style={{height: 35, width: 35, marginTop: 4}}
+            rounded
+            source={{
+              uri: image ? image : avtarImage,
+            }}
+          />
+        </TouchableOpacity>
       </View>
-      <View style={{flexDirection: 'column', marginLeft:40,}}>
+      <View style={{flexDirection: 'column', marginLeft: 40}}>
         <Text style={{fontWeight: 'bold'}}>
           {asyncFirstName} {asyncLastName}
         </Text>
@@ -212,11 +195,8 @@ export default function Profile(props) {
             alignItems: 'center',
             marginTop: 20,
             alignItems: 'center',
-          }}
-          >
-          <Text style={{fontSize: 17}}>
-            Upload
-          </Text>
+          }}>
+          <Text style={{fontSize: 17}}>Upload</Text>
         </TouchableOpacity>
       </View>
     </View>

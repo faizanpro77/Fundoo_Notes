@@ -17,6 +17,8 @@ const EditeNoteScreenCss = StyleSheet.create({
         flexDirection:'row',
         marginVertical: 20, 
         height:30,
+       justifyContent:'space-between'
+
         },
         backArrowpic:{
             height:25,
@@ -75,7 +77,8 @@ const EditeNoteScreenCss = StyleSheet.create({
       footer:{
        flexDirection:'row',
        height:50,
-       alignItems:'center'
+       alignItems:'center',
+       justifyContent:'space-between'
       },
       addfeaturemenue:{
           height:20,
@@ -90,9 +93,16 @@ const EditeNoteScreenCss = StyleSheet.create({
       threedotmenue:{
           height:25,
           width:25,
-          marginLeft:'79%'
+          marginRight:20
       },
-     
+      watchImg:{
+          height:25,
+          width:25
+      },
+      imageView:{
+        margin:10,
+        flexDirection:'row'  
+      }
 
 
 

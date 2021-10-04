@@ -6,8 +6,8 @@ import {View} from 'react-native'
 // import LabelScreen1 from './src/screens/LabelScreen';
 // import ArchiveScreen from './src/screens/ArchiveScreen';
  //import DeleteScreen from './src/screens/DeleteScreen';
-import SearchScreen from './src/screens/SearchScreen';
-import SplashScreen from './src/screens/SplashScreen';
+//import SearchScreen from './src/screens/SearchScreen';
+//import SplashScreen from './src/screens/SplashScreen';
 // import DashboardCard from './src/Component/DashboardCard';
 // import ColorChager from './src/Component/Color'
 
@@ -18,10 +18,10 @@ function App() {
 
    
         return(
-              <StackNavigation/>
-      //   <View>
-      //      <SplashScreen/>
-      //   </View>
+               <StackNavigation/>
+        // <View>
+        //    <ProfileWeb1/>
+        // </View>
                );
     }
 

@@ -89,6 +89,7 @@ export const editNoteDataUpdate = (
   trash,
   pin,
   archive,
+  labelArrayfromLabelArr
 ) => {
   let userNoteDataUpdate = {
     Title: title,
@@ -97,6 +98,7 @@ export const editNoteDataUpdate = (
     Trash: trash,
     Pin: pin,
     Archive: archive,
+    LabelArr:labelArrayfromLabelArr
   };
 
   firestore().collection('notes').doc(key).update(userNoteDataUpdate);
@@ -255,3 +257,30 @@ export const createImagecolleciton = async() => {
     
 
   }
+
+
+  export const  EditLabelForEditeLabelScreen1= (labelArrData2)=>{
+    // setlabelArrDataState(labelArrData2)
+      // console.log('yyyyyyyyyyyyyyyy',labelArrData2)
+       labelArrData2.map(labeldata=>{
+        
+        // console.log('????????????',labeldata);
+       const ORDER_ITEMS = firestore()
+         .collection('Label')
+   
+         ORDER_ITEMS .where('Label','==',labeldata )
+         .get()
+         .then(snapshots=>{
+           if(snapshots.size>0){
+             snapshots.forEach(orderItem=>{
+               ORDER_ITEMS.doc(orderItem.id).update({CheckBox:true})
+             })
+           }
+         })      
+         
+       })
+     
+   
+     }
+   
+   

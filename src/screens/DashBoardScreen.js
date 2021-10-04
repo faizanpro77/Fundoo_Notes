@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import firestore from '@react-native-firebase/firestore';
 import React, {Component} from 'react';
 //import { DrawerActions} from '@react-navigation/native';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -33,29 +34,15 @@ class DashBoardScreen extends Component {
     searchText: '',
     note: [],
     filterArr: [],
-    userprofile:'https://www.w3schools.com/howto/img_avatar.png'
+    userprofile:'https://www.w3schools.com/howto/img_avatar.png',
+    imageUrlProps:'https://www.w3schools.com/howto/img_avatar.png',
+    userprofileData:null,
+    userprofileCop:'',
+   
     };
   }
  
-  // componentDidMount(){
-  
-  //  // this.focusListener = this.props.navigation.addListener('focus', () => {
-    
-  //    ()=>{  getNotes().then(res => {
-  //         this.setState({notes:res},console.log('notesssssssssssssssssss',this.state.notes));
-  //        });
-  //        console.log('ssssssssss',this.state.notes);
-  //   //  });
-  //       }
-  // }
 
-//   componentDidMount() {
-//     getNotes().then((res) => {
-//         this.setState({
-//             note: res
-//         })
-//     })
-// }
 
 
   gridView = () => {
@@ -69,29 +56,34 @@ class DashBoardScreen extends Component {
     this.props.navigation.navigate('CreateNote');
   };
 
-async componentDidMount(){
- // let userprofile1 = await getUserProfileImage1()
-  let asyimage= await AsyncStorage.getItem('userImage')
+ async componentDidMount(){
+
+    // this.focusListener = this.props.navigation.addListener('focus', function() {
+
+  let asyimage= await AsyncStorage.getItem('userImage') 
 
   this.setState({userprofile:asyimage})
+// });
+  
  //console.log('asyimageeeeeeeeeee',asyimage);
 }
 
-//  componentWillUnmount(){
-//   let asyimage=  AsyncStorage.getItem('userImage')
 
-//   this.setState({userprofile:asyimage})
-//  console.log('asyimageeeeeeeeeee',asyimage);
-
-// }
   
 handlesearch=()=>{
   this.props.navigation.navigate('SearchNote')
 }
 
-// profileProps=(imageData)=>{
-// console.log('imageDataaaaaaa',imageData);
-// }
+
+handleProfiledata=(imgurl)=>{
+ // this.setState({imageUrlProps:imgurl})
+  this.setState({userprofile:imgurl})
+  
+  console.log('////////////////////',this.state.userprofile);
+  
+   }
+
+
 
   render() {
     return (
@@ -141,7 +133,7 @@ handlesearch=()=>{
                   <TouchableOpacity onPress={() => this.RBSheet.open()}>
                     <Image
                       style={DashBoardCss.profileImg}
-                      source={{uri:this.state.userprofile}}
+                      source={{uri: this.state.userprofile}}
                     />
                   </TouchableOpacity>
                   <RBSheet
@@ -149,8 +141,8 @@ handlesearch=()=>{
                       this.RBSheet = ref;
                     }}
                     height={260}>
-                      <Profile  />
-                      {/* profileUserData={this.profileProps} */}
+                      {/* <Profile /> */}
+                      <Profile  profileImageprops={this.handleProfiledata} />
                   </RBSheet>
                 </View>
               </View>

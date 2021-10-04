@@ -8,7 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 
 //import { CheckBox } from 'react-native-elements'
 
-export default function LabelScreen(props) {
+export default function EditeLabelScreen(props) {
   const [labelText, setlabelText] = useState('');
   const [labelArray, setlabelArray] = useState([]);
   const [checked, setChecked] = useState(false);
@@ -37,8 +37,11 @@ export default function LabelScreen(props) {
       }
     )
        //  console.log('filterlabelllllllllllllllllllllll',filterLabelArray);
-          navigation.navigate('CreateNote',{LabbelArr:filterLabelArray})
 
+       //  var labelArrDataState=[]
+    
+    navigation.navigate('EditNOte',{labelArrDataState:filterLabelArray,labelArrayTrueFalse:true})
+   
   
   }
 
@@ -52,14 +55,15 @@ export default function LabelScreen(props) {
    }
 
   useEffect(() => {
-    
-   //const unsubscribe = navigation.addListener('focus', () => {
+   // const{labelArrData1}=props.route.params
+     const unsubscribe = navigation.addListener('focus', () => {
     getLabel().then(res => {
+      //console.log('eeeeeeeeeeeeeeee',res);
       setlabelArray(res);
     });
- // });
- // return unsubscribe;
-  }, []);
+  });
+  return unsubscribe;
+  }, [navigation]);
 
 
 

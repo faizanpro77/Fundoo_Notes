@@ -2,9 +2,9 @@ import React, {Component, useEffect, useState} from 'react';
 import {Card} from 'react-native-elements';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 //import DashBoardCardCss from '../css/DashBoardCardCss';
-import {getNotes} from '../services/NotesServices';
+import {getNotes, setAllCheckBoxValueFalse} from '../services/NotesServices';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
-
+//setAllCheckBoxValueFalse();
 //props.seachNoteData
 
 export default function DashboardCard(props) {
@@ -23,6 +23,16 @@ export default function DashboardCard(props) {
 
   const navigation = useNavigation();
   var labelarr = [];
+
+const navigateEditScreen=(note)=>{
+  setAllCheckBoxValueFalse();
+  //console.log('navigateEditScreennnnnnnnnn');
+  navigation.navigate('EditNOte', {
+    displayNoteData: note,
+    key: note.id,
+    CardBolean:false
+  });
+}
   return (
     <View
       style={{
@@ -34,11 +44,7 @@ export default function DashboardCard(props) {
       {/* {Object.keys(notes).map((note) => {  */}
       {notes.map(note => {
         labelarr = note._data.LabelArr;
-       // console.log('noteeeeeeeeeeeeeeeeeeeeeeeeeeee', note);
-        //   let not2=note.data();
-        //   console.log('data()not2',not2.Title)
-        //  // console.log('res in map2222222222222', note._data.Description);
-        // console.log('note._data.Title,,,,,1111111',note._data.Title)
+       
         let gridView = {
           width: 166,
           borderRadius: 10,
@@ -60,33 +66,30 @@ export default function DashboardCard(props) {
           return (
             <View key={note.id}>
               <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('EditNOte', {
-                    displayNoteData: note,
-                    key: note.id,
-                  });
-                }}>
+                onPress={() => navigateEditScreen(note)
+                }>
                 <Card containerStyle={props.gridListdata ? gridView : listView}>
                   <Card.Title>{note._data.Title}</Card.Title>
                   <Text>{note._data.Description} </Text>
 
                   {
                   labelarr.map(labelData => { 
-
-                    console.log('labelDataaaaaaaaaaaaaaaa',labelarr); 
-                  <View>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: 'lightgrey',
-                        borderRadius: 20,
-                        justifyContent: 'center',
-                        padding: 5,
-                        marginRight: 5,
-                      }}>
-                      <Text>{labelarr}</Text>
-                    </TouchableOpacity>
+                  return(
+                    // console.log('labelDataaaaaaaaaaaaaaaa',labelarr); 
+                  <View style={{
+                    backgroundColor: 'lightgrey',
+                    borderRadius: 20,
+                    justifyContent: 'center',
+                    padding: 5,
+                    marginRight: 5,
+                    marginTop:7
+                  }} >
+                    
+                      <Text>{labelData}</Text>
                   </View>
-                   })} 
+                    )  })} 
+
+
                 </Card>
               </TouchableOpacity>
             </View>
