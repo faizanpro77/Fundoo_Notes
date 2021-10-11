@@ -36,6 +36,7 @@ class DashBoardScreen extends Component {
     filterArr: [],
     userprofile:'https://www.w3schools.com/howto/img_avatar.png',
     imageUrlProps:'https://www.w3schools.com/howto/img_avatar.png',
+    avtarImage: 'https://www.w3schools.com/howto/img_avatar.png',
     userprofileData:null,
     userprofileCop:'',
    
@@ -79,7 +80,7 @@ handleProfiledata=(imgurl)=>{
  // this.setState({imageUrlProps:imgurl})
   this.setState({userprofile:imgurl})
   
-  console.log('////////////////////',this.state.userprofile);
+ // console.log('////////////////////',this.state.userprofile);
   
    }
 
@@ -133,7 +134,7 @@ handleProfiledata=(imgurl)=>{
                   <TouchableOpacity onPress={() => this.RBSheet.open()}>
                     <Image
                       style={DashBoardCss.profileImg}
-                      source={{uri: this.state.userprofile}}
+                      source={{uri: this.state.userprofile?this.state.userprofile:this.state.avtarImage}}
                     />
                   </TouchableOpacity>
                   <RBSheet

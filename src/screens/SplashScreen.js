@@ -4,6 +4,8 @@ import Global from '../css/Global';
 import styles from '../css/SignIncss';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
+import PushNotification from "react-native-push-notification";
+
 
 export async function CheckEmailSplash() {
   var emialdata1 = await AsyncStorage.getItem('Email');
@@ -21,7 +23,8 @@ export async function CheckEmailSplash() {
       .then(data => {
         data.docs.forEach(element => {
           var elementdata = element.exists;
-
+            //console.warn('elementelement',element);
+            // console.warn('true true0000',elementdata);
           if (elementdata) return (response1 = success1);
           else return (response1 = fial1);
         });
@@ -38,7 +41,16 @@ export default class SplashScreen extends Component {
     super(props);
   }
 
+  createChannels=()=>{
+    console.log('splash timer');
+    PushNotification.createChannel({
+      channelId:'test-channel',
+      channelName:'Test Channel'
+    })
+  }
   async componentDidMount() {
+
+    this.createChannels()
     let response = await CheckEmailSplash();
     if (response == 'success') {
       //console.log('55555555555555555',response);

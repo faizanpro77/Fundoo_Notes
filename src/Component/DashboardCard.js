@@ -4,6 +4,8 @@ import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 //import DashBoardCardCss from '../css/DashBoardCardCss';
 import {getNotes, setAllCheckBoxValueFalse} from '../services/NotesServices';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import moment from 'moment';
+import {not} from 'react-native-reanimated';
 //setAllCheckBoxValueFalse();
 //props.seachNoteData
 
@@ -24,15 +26,15 @@ export default function DashboardCard(props) {
   const navigation = useNavigation();
   var labelarr = [];
 
-const navigateEditScreen=(note)=>{
-  setAllCheckBoxValueFalse();
-  //console.log('navigateEditScreennnnnnnnnn');
-  navigation.navigate('EditNOte', {
-    displayNoteData: note,
-    key: note.id,
-    CardBolean:false
-  });
-}
+  const navigateEditScreen = note => {
+    setAllCheckBoxValueFalse();
+    //console.log('navigateEditScreennnnnnnnnn');
+    navigation.navigate('EditNOte', {
+      displayNoteData: note,
+      key: note.id,
+      CardBolean: false,
+    });
+  };
   return (
     <View
       style={{
@@ -41,10 +43,9 @@ const navigateEditScreen=(note)=>{
         flexDirection: 'row',
         alignSelf: 'center',
       }}>
-      {/* {Object.keys(notes).map((note) => {  */}
       {notes.map(note => {
         labelarr = note._data.LabelArr;
-       
+
         let gridView = {
           width: 166,
           borderRadius: 10,
@@ -62,38 +63,57 @@ const navigateEditScreen=(note)=>{
           note._data.Trash == false &&
           note._data.Archive == false &&
           note._data.Pin == false
-        )
+        ) {
           return (
             <View key={note.id}>
-              <TouchableOpacity
-                onPress={() => navigateEditScreen(note)
-                }>
+              <TouchableOpacity onPress={() => navigateEditScreen(note)}>
                 <Card containerStyle={props.gridListdata ? gridView : listView}>
-                  <Card.Title>{note._data.Title}</Card.Title>
+                  <Text style={{fontWeight:'bold',fontSize:15}}>{note._data.Title}</Text>
                   <Text>{note._data.Description} </Text>
 
-                  {
-                  labelarr.map(labelData => { 
-                  return(
-                    // console.log('labelDataaaaaaaaaaaaaaaa',labelarr); 
-                  <View style={{
-                    backgroundColor: 'lightgrey',
-                    borderRadius: 20,
-                    justifyContent: 'center',
-                    padding: 5,
-                    marginRight: 5,
-                    marginTop:7
-                  }} >
-                    
-                      <Text>{labelData}</Text>
+                  <View
+                    style={{
+                      flexWrap: 'wrap',
+                      flexDirection: 'row',
+                      
+                    }}>
+                    {note._data.DateTimeChipBoolean ? (
+                      <View
+                        style={{
+                          marginBottom: 10,
+                          backgroundColor: 'lightgrey',
+                          height: 30,
+                          borderRadius: 10,
+                          justifyContent: 'center',
+                          marginRight:5
+                        }}>
+                        <Text>
+                          {note._data.Date},{note._data.Time}
+                        </Text>
+                      </View>
+                    ) : null}
+                    {labelarr.map(labelData => {
+                      return (
+                        // console.log('labelDataaaaaaaaaaaaaaaa',labelarr);
+                        <View
+                          style={{
+                            backgroundColor: 'lightgrey',
+                            borderRadius: 20,
+                            justifyContent: 'center',
+                            padding: 5,
+                            marginBottom: 10,
+                            marginRight:5
+                          }}>
+                          <Text>{labelData}</Text>
+                        </View>
+                      );
+                    })}
                   </View>
-                    )  })} 
-
-
                 </Card>
               </TouchableOpacity>
             </View>
           );
+        }
       })}
     </View>
   );

@@ -11,9 +11,10 @@ export function signUp(signUPData) {
     })
     .catch(() => {
       console.warn(error);
-      console.log(error);
+      console.log('hkjfsdkjhkfkdj jfdhskj');
     });
 }
+
 
 //get email and password for user authentication at signIn time
 export async function signIn(emailData, PasswordData) {

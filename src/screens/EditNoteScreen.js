@@ -2,11 +2,15 @@ import React, {Component} from 'react';
 import {TouchableOpacity, View, Image, TextInput, Text} from 'react-native';
 import EditeNoteScreenCss, {passcolordata} from '../css/CreateNoteScreenCss';
 import {
+  deleteBooleanChipUpdate,
   EditLabelForEditeLabelScreen1,
   editNoteDataUpdate,
+  editNoteDataUpdateTimeDate,
+  generateRandomIdData,
   getLabel,
   noteData,
   setAllCheckBoxValueFalse,
+  updateNotificationId,
 } from '../services/NotesServices';
 import Snackbar from 'react-native-snackbar';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -15,6 +19,11 @@ import {getNotes} from '../services/NotesServices';
 import Modal from 'react-native-modal';
 import {Button} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import AddReminder from '../Component/AddReminder';
+import moment from 'moment';
+import PushNotification from 'react-native-push-notification';
+import firestore from '@react-native-firebase/firestore';
+
 
 export default class EditNoteScreen extends Component {
   constructor(props) {
@@ -34,14 +43,22 @@ export default class EditNoteScreen extends Component {
       isModalVisible: false,
       isDatePickerVisible: false,
       isTime: false,
+      formateDate: '',
+      formateTime: '',
+      timeDateBoolean: false,
+      selectedDate: '',
+      selectedTime: '',
+      timeDateBoolean1: false,
+      RandomId1: '',
+      RandomId:''
     };
   }
 
   //handle archive true false and nevigat dashbord
   handleArchive = () => {
     this.setState({archive: !this.state.archive}, () => {
-      console.log('archiveeeeeeeee', this.state.archive),
-        this.props.navigation.navigate('DashBoard');
+      console.warn('archiveeeeeeeee', this.state.archive)
+        // this.props.navigation.navigate('DashBoard');
     });
   };
 
@@ -53,8 +70,8 @@ export default class EditNoteScreen extends Component {
 
   handleTrash = () => {
     this.setState({trash: !this.state.trash}, () => {
-      console.log('Trashhhhhhhhhhhh', this.state.trash),
-        this.props.navigation.navigate('DashBoard');
+      console.warn('Trashhhhhhhhhhhh', this.state.trash)
+        // this.props.navigation.navigate('DashBoard');
     });
   };
 
@@ -78,12 +95,11 @@ export default class EditNoteScreen extends Component {
 
   //send data to add into firebase
   backArrow = () => {
-    // console.log('...................'+title)
-    // console.log('................'+noteDescription)
-    // console.log('pinnnnnnnnnnnnnnnnnnbackarrow', this.state.pin);
-    // console.log('Trashsdhhhhhhhhhhbackarrow', this.state.trash);
-    // console.log('archiveeeeeeeee', this.state.archive);
+    //  console.log('displayNoteDatadisplayNoteData',displayNoteData._data.RandomId);
 
+    if (this.state.timeDateBoolean == true) {
+      this.handleLocalPushNotification();
+    }
     if (
       this.state.title != '' &&
       this.state.description != '' &&
@@ -100,6 +116,14 @@ export default class EditNoteScreen extends Component {
         this.state.labelArrayfromLabelArr,
       );
     this.props.navigation.navigate('DashBoard'); //goBack()
+    if (this.state.timeDateBoolean1 == true) {
+      editNoteDataUpdateTimeDate(
+        this.state.key,
+        moment(this.state.selectedDate).format('D MMM'),
+        moment(this.state.selectedTime).format('h:mm a'),
+        this.state.timeDateBoolean,
+      );
+    }
     // console.log('responsenotedata***************'+response)
     // if (response == 'success') {
     //   Snackbar.show({
@@ -123,12 +147,11 @@ export default class EditNoteScreen extends Component {
     // }
   };
 
-
   componentDidMount() {
-    
+    this.generateRandomId()
     const {displayNoteData, key, searchOpen, CardBolean} =
       this.props.route.params;
-   
+
     //if(CardBolean==true ){
     this.focusListener = this.props.navigation.addListener('focus', () => {
       const {labelArrDataState, labelArrayTrueFalse} = this.props.route.params;
@@ -137,7 +160,7 @@ export default class EditNoteScreen extends Component {
       if (labelArrayTrueFalse == true) {
         this.setState({labelArrayfromLabelArr: labelArrDataState});
       } else {
-        this.setState({labelArrayfromLabelArr: displayNoteData._data.LabelArr});
+        this.setState({labelArrayfromLabelArr: this.state.labelArrData});
       }
     });
     /// }
@@ -145,18 +168,17 @@ export default class EditNoteScreen extends Component {
     if (searchOpen) {
       //console.log('keyyyyyyyyyyyyyyyyyy',key);
       //console.log('searchOpennnnnnnnnnnnnnnnnnnn',searchOpen);
-      this.setState(
-        {
-          key: key,
-          title: displayNoteData.Title,
-          color: displayNoteData.Colour,
-          description: displayNoteData.Description,
-          pin: displayNoteData.Pin,
-          archive: displayNoteData.Archive,
-          trash: displayNoteData.Trash,
-        },
-        () => console.log('notedataaaaaa', displayNoteData.Title),
-      );
+      this.setState({
+        key: key,
+        title: displayNoteData.Title,
+        color: displayNoteData.Colour,
+        description: displayNoteData.Description,
+        pin: displayNoteData.Pin,
+        archive: displayNoteData.Archive,
+        trash: displayNoteData.Trash,
+        labelArrData: displayNoteData.LabelArr,
+
+      });
       //console.log('keyyyyyyyyyy',displayNoteData)
     } else {
       this.setState({
@@ -168,7 +190,11 @@ export default class EditNoteScreen extends Component {
         archive: displayNoteData._data.Archive,
         trash: displayNoteData._data.Trash,
         labelArrData: displayNoteData._data.LabelArr,
-      }); //,()=>console.log('notedataaaaaa',this.state.labelArrData)
+        formateDate: displayNoteData._data.Date,
+        formateTime: displayNoteData._data.Time,
+        timeDateBoolean: displayNoteData._data.DateTimeChipBoolean,
+        RandomId1: displayNoteData._data.RandomId,
+      }); //() => console.log('displayNoteDatadisplayNoteData', this.state.RandomId1)
       //console.log('keyyyyyyyyyy',key)
     }
   }
@@ -194,38 +220,37 @@ export default class EditNoteScreen extends Component {
     }, 70);
   };
 
-  toggleModal = () => {
-   // console.log('isModelVisiblehhhhhhhhhhhhhhhhhhhh');
-    this.setState({isModalVisible: !this.state.isModalVisible});
-
+  generateRandomId = () => {
+    let randomId = generateRandomIdData();
+    console.log('randomIdrandomId', randomId);
+    this.setState({RandomId: randomId},()=>console.log('ttttttt11111ttttttttt',this.state.RandomId));
   };
 
-  showDate = () => {
-
-    this.setState({isDatePickerVisible: true});
+  handleLocalPushNotification = () => {
+    // PushNotification.cancelAllLocalNotifications();
+        updateNotificationId(this.state.key,this.state.RandomId)
+    if (this.state.timeDateBoolean1 == true) {
+      if (this.state.selectedDate != null && this.state.selectedDate != null) {
+        let date = JSON.stringify(this.state.selectedDate).slice(1, 11);
+        let time = JSON.stringify(this.state.selectedTime).slice(11, 25);
+        let dateShedule = new Date(date + time);
+        PushNotification.localNotificationSchedule({
+          id:this.state.RandomId,
+          channelId: 'test-channel',
+          title: this.state.title,
+          message: this.state.description,
+          date: dateShedule,
+        });
+      }
+    }
   };
 
-  hideDate = () => {
-    this.setState({
-      isDatePickerVisible: false,
-    });
-  };
-
-  handleDate = date => {
-    console.warn('A date has been picked: ', date);
-  };
-
-  showTime = () => {
-    this.setState({isTime: true});
-  };
-
-  hideTime = () => {
-    this.setState({isTime: false});
-  };
-
-  handleTime = time => {
-    console.warn('time is picked', time);
-    this.hideTime();
+  deleteBooleanUpdate = deleteBoolean => {
+   // console.log('displayNoteDatadisplayNoteData', this.state.RandomId1);
+    PushNotification.cancelLocalNotification({id: this.state.RandomId1});
+    this.setState({timeDateBoolean: deleteBoolean}, () =>
+      deleteBooleanChipUpdate(this.state.key, this.state.timeDateBoolean),
+    );
   };
 
   render() {
@@ -265,152 +290,22 @@ export default class EditNoteScreen extends Component {
                 </TouchableOpacity>
               )}
             </View>
-            {/* /////////////////////////////////////////////////////////////////////////////////////////////////////// */}
 
-            <View style={{marginLeft: 22}}>
-              <TouchableOpacity onPress={() => this.RBSheetReminder.open()}>
-                <Image
-                  style={EditeNoteScreenCss.reminderpluspic}
-                  source={require('../Assets/icons/reminderplus.png')}
-                />
-              </TouchableOpacity>
-            </View>
+            {/* /*jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj  */}
 
-            <RBSheet
-              ref={ref => {
-                this.RBSheetReminder = ref;
-              }}
-              height={235}
-              customStyles={{
-                container: {
-                  backgroundColor: this.state.color,
-                },
-              }}>
-              <View>
-                <TouchableOpacity>
-                  <View
-                    style={{
-                      justifyContent: 'space-between',
-                      flexDirection: 'row',
-                    }}>
-                    <View style={EditeNoteScreenCss.imageView}>
-                      <Image
-                        style={EditeNoteScreenCss.watchImg}
-                        source={require('../Assets/icons/watch1.png')}
-                      />
-                      <Text style={{marginLeft: 30}}>Later today </Text>
-                    </View>
-                    <Text style={{marginRight: 20, marginTop: 10}}>
-                      6.00 pm
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity>
-                  <View
-                    style={{
-                      justifyContent: 'space-between',
-                      flexDirection: 'row',
-                    }}>
-                    <View style={EditeNoteScreenCss.imageView}>
-                      <Image
-                        style={EditeNoteScreenCss.watchImg}
-                        source={require('../Assets/icons/watch1.png')}
-                      />
-                      <Text style={{marginLeft: 30}}>Tomorrow morning</Text>
-                    </View>
-                    <Text style={{marginRight: 20, marginTop: 10}}>
-                      8.00 am
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={this.toggleModal}>
-                  <View style={EditeNoteScreenCss.imageView}>
-                    <Image
-                      style={EditeNoteScreenCss.watchImg}
-                      source={require('../Assets/icons/watch1.png')}
-                    />
-                    <Text style={{marginLeft: 30}}>Choose a date & time</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </RBSheet>
-
-            <Modal isVisible={this.state.isModalVisible}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  borderRadius: 10,
-                  //alignItems: 'center',
-                }}>
-                <View
-                  style={{width: '80%', marginLeft: '10%', marginRight: '10%'}}>
-                  <Text style={{fontSize: 24, marginTop: 15}}>
-                    Add reminder
-                  </Text>
-                  <View style={{marginTop: 20}}>
-                    <TouchableOpacity onPress={this.showDate}>
-                      <Text>Select Date</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <DateTimePickerModal
-                    isVisible={this.state.isDatePickerVisible}
-                    mode="date"
-                    onConfirm={this.handleDate}
-                    onCancel={this.hideDate}
-                  />
-
-                  <View
-                    style={{
-                      backgroundColor: 'gray',
-                      height: 1,
-                      width: '100%',
-                      // marginLeft: '5%',
-                      // marginRight: '5%',
-                      marginTop: 10,
-                    }}></View>
-
-                  <View style={{marginTop: 20}}>
-                    <TouchableOpacity onPress={this.showTime}>
-                      <Text>Select Time</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <DateTimePickerModal
-                    isVisible={this.state.isTime}
-                    mode="time"
-                    onConfirm={this.handleTime}
-                    onCancel={this.hideTime}
-                  />
-
-                  <View style={{flexDirection: 'row', marginBottom: 10}}>
-                    <Button
-                      uppercase={false}
-                      style={{marginTop: 40, marginLeft: '40%', width: '30%'}}
-                      mode="text"
-                      onPress={this.toggleModal}>
-                      <Text style={{color: 'blue'}}>Cancel</Text>
-                    </Button>
-
-                    <Button
-                      uppercase={false}
-                      style={{
-                        marginTop: 40,
-                        marginLeft: '1%',
-                        width: '30%',
-                        backgroundColor: 'blue',
-                        borderRadius: 20,
-                      }}
-                      mode="contained"
-                      onPress={this.toggleModal}>
-                      <Text>Save</Text>
-                    </Button>
-                  </View>
-                </View>
-              </View>
-            </Modal>
-
-            {/* //////////////////////////////////////////////////////////////////////////////////////////////////////// */}
+            <AddReminder
+              colorProps={this.state.color}
+              sendDateTime={(date, time, chip) =>
+                this.setState({
+                  selectedDate: date,
+                  selectedTime: time,
+                  timeDateBoolean1: chip,
+                  timeDateBoolean: chip,
+                })
+              }
+              //  DeleteTimeLabelBooleanRecieve={(deleteBoolean)=>this.setState({timeDateBoolean:deleteBoolean})}
+              DeleteTimeLabelBooleanRecieve={this.deleteBooleanUpdate}
+            />
 
             <View style={{marginLeft: 22}}>
               <TouchableOpacity onPress={this.handleArchive}>
@@ -443,7 +338,6 @@ export default class EditNoteScreen extends Component {
           />
         </View>
 
-        
         {this.state.updatedLabelTrueFalse ? (
           <View
             style={{
@@ -452,27 +346,24 @@ export default class EditNoteScreen extends Component {
               flexDirection: 'row',
               marginRight: 10,
             }}>
-            {
-
-              this.state.labelArrayfromLabelArr.map(labelData => {
-                return (
-                  <View key={labelData.id}>
-                    <TouchableOpacity
-                      onPress={this.handleNavigateEditeScreen}
-                      style={{
-                        backgroundColor: 'gray',
-                        borderRadius: 20,
-                        justifyContent: 'center',
-                        padding: 5,
-                        marginRight: 5,
-                        marginTop: 5,
-                      }}>
-                      <Text>{labelData}</Text>
-                    </TouchableOpacity>
-                  </View>
-                );
-              })
-            }
+            {this.state.labelArrayfromLabelArr.map(labelData => {
+              return (
+                <View key={labelData.id}>
+                  <TouchableOpacity
+                    onPress={this.handleNavigateEditeScreen}
+                    style={{
+                      backgroundColor: 'gray',
+                      borderRadius: 20,
+                      justifyContent: 'center',
+                      padding: 5,
+                      marginRight: 5,
+                      marginTop: 5,
+                    }}>
+                    <Text>{labelData}</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
           </View>
         ) : (
           <View
@@ -482,28 +373,52 @@ export default class EditNoteScreen extends Component {
               flexDirection: 'row',
               marginRight: 10,
             }}>
-            {
-              //this.state.updatedLabelTrueFalse?this.state.labelArrayfromLabelArr:this.state.labelArrData.map(labelData=>{
+            {/* /////////////////////////////////////////////////////////////////////////////////////////////////////// */}
 
-              this.state.labelArrData.map(labelData => {
-                return (
-                  <View key={labelData.id}>
-                    <TouchableOpacity
-                      onPress={this.handleNavigateEditeScreen}
-                      style={{
-                        backgroundColor: 'gray',
-                        borderRadius: 20,
-                        justifyContent: 'center',
-                        padding: 5,
-                        marginRight: 5,
-                        marginTop: 5,
-                      }}>
-                      <Text>{labelData}</Text>
-                    </TouchableOpacity>
-                  </View>
-                );
-              })
-            }
+            <View>
+              {this.state.timeDateBoolean ? (
+                <View
+                  style={{
+                    marginBottom: 10,
+                    backgroundColor: 'lightgrey',
+                    height: 30,
+                    borderRadius: 10,
+                    justifyContent: 'center',
+                    marginTop: 5,
+                    marginRight: 7,
+                  }}>
+                  {this.state.timeDateBoolean1 ? (
+                    <Text>
+                      {moment(this.state.selectedDate).format('D MMM')},
+                      {moment(this.state.selectedTime).format('h:mm a')}
+                    </Text>
+                  ) : (
+                    <Text>
+                      {this.state.formateDate},{this.state.formateTime}
+                    </Text>
+                  )}
+                </View>
+              ) : null}
+            </View>
+
+            {this.state.labelArrData.map(labelData => {
+              return (
+                <View key={labelData.id}>
+                  <TouchableOpacity
+                    onPress={this.handleNavigateEditeScreen}
+                    style={{
+                      backgroundColor: 'lightgrey',
+                      borderRadius: 20,
+                      justifyContent: 'center',
+                      padding: 5,
+                      marginRight: 5,
+                      marginTop: 5,
+                    }}>
+                    <Text>{labelData}</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
           </View>
         )}
 

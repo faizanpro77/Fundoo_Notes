@@ -1,16 +1,24 @@
 import React, {Component} from 'react';
 import {TouchableOpacity, View, Image, TextInput, Text} from 'react-native';
 import EditeNoteScreenCss, {passcolordata} from '../css/CreateNoteScreenCss';
-import {getLabel, noteData} from '../services/NotesServices';
+import {
+  generateRandomIdData,
+  getLabel,
+  noteData,
+} from '../services/NotesServices';
 import Snackbar from 'react-native-snackbar';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ColorChager from '../Component/Color';
-import {getNotes} from '../services/NotesServices';
-import Modal from 'react-native-modal';
-import {Button} from 'react-native-paper';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {Chip} from 'react-native-paper';
+//import {getNotes} from '../services/NotesServices';
+//import Modal from 'react-native-modal';
+//import {Button} from 'react-native-paper';
+//import DateTimePickerModal from 'react-native-modal-datetime-picker';
+//import {Chip} from 'react-native-paper';
 import moment from 'moment';
+import AddReminder from '../Component/AddReminder';
+import PushNotification from 'react-native-push-notification';
+//import firestore from '@react-native-firebase/firestore';
+//import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class CreateNoteScreen extends Component {
   constructor(props) {
@@ -31,8 +39,11 @@ export default class CreateNoteScreen extends Component {
       isTime: false,
       currrentDate: '',
       selectedDate: '',
-      selectTime: '',
-      chipBoolean: false,
+      selectedTime: '',
+      dateTimeChipBoolean: false,
+      momentFormateDate: '',
+      momentFormateTime: '',
+      RandomId: '',
     };
   }
 
@@ -83,6 +94,10 @@ export default class CreateNoteScreen extends Component {
 
   //send data to add into firebase
   backArrow = async addLabelDataArr => {
+    if (this.state.dateTimeChipBoolean == true) {
+      this.handleLocalPushNotification();
+    }
+
     if (
       this.state.title != '' &&
       this.state.description != '' &&
@@ -96,6 +111,10 @@ export default class CreateNoteScreen extends Component {
         this.state.pin,
         this.state.archive,
         this.state.labelDataArr,
+        moment(this.state.selectedDate).format('D MMM'),
+        moment(this.state.selectedTime).format('h:mm a'),
+        this.state.dateTimeChipBoolean,
+        this.state.RandomId,
       );
     }
     // console.log('responsenotedata***************' + response);
@@ -122,64 +141,42 @@ export default class CreateNoteScreen extends Component {
   };
 
   componentDidUpdate() {
-    //var hours = new Date().getHours()+6
-    //console.log('hoursssssssssss',hours);
     this.focusListener = this.props.navigation.addListener('focus', () => {
       const {LabbelArr} = this.props.route.params;
       this.setState({labelDataArr: LabbelArr});
     });
   }
 
-  toggleModal = () => {
-    this.setState({isModalVisible: !this.state.isModalVisible});
+  componentDidMount = () => {
+    this.generateRandomId();
   };
 
-  showDate = () => {
-    this.setState({isDatePickerVisible: true});
+  generateRandomId = () => {
+    let randomId = generateRandomIdData();
+   // console.log('randomIdrandomId', randomId);
+    this.setState({RandomId: randomId});
   };
 
-  hideDate = () => {
-    this.setState({
-      isDatePickerVisible: false,
-    });
+  handleLocalPushNotification = () => {
+    // PushNotification.cancelAllLocalNotifications();
+    // console.log('RanomIdRanomId7777777777',this.state.RandomId);
+
+    if (this.state.selectedDate != null && this.state.selectedDate != null) {
+      let date = JSON.stringify(this.state.selectedDate).slice(1, 11);
+      let time = JSON.stringify(this.state.selectedTime).slice(11, 25);
+      let dateShedule = new Date(date + time);
+      PushNotification.localNotificationSchedule({
+        id: this.state.RandomId,
+        channelId: 'test-channel',
+        title: this.state.title,
+        message: this.state.description,
+        date: dateShedule,
+      });
+    }
   };
 
-  handleDate = date => {
-    console.warn('A date has been picked: ', date);
-    let spliceDate = '' + date;
-    spliceDate = spliceDate.slice(4, 10);
-    this.setState({selectedDate: spliceDate});
-    console.log('spliceDateeeeeeeeeeeee', this.state.selectedDate);
-    this.hideDate();
-  };
-
-  showTime = () => {
-    this.setState({isTime: true});
-  };
-
-  hideTime = () => {
-    this.setState({isTime: false});
-  };
-
-  handleTime = time => {
-    console.warn('time is picked', time);
-    let sliceTime = '' + time;
-    sliceTime = sliceTime.slice(15, 21);
-    this.setState({selectTime: sliceTime});
-
-    console.log('spliceTimeeeeeeeeeeeee', this.state.selectTime);
-    this.hideTime();
-  };
-
-  handleSave = () => {
-    let newDateTime = this.state.selectedDate + ',' + this.state.selectTime;
-    console.log('newDateTimeeeeeee', newDateTime);
-    this.toggleModal()
-  };
   render() {
-    // LabbelArr=[]
     var addLabelDataArr = [];
-    //console.log('isModalVisibleeeeeeeeeeeeeeee',this.state.isModalVisible);
 
     return (
       // <View style={EditeNoteScreenCss.container1}>
@@ -219,149 +216,16 @@ export default class CreateNoteScreen extends Component {
               )}
             </View>
             {/* //////////////////////////////////////////////////////////////////////////////////////////////////////// */}
-
-            <View style={{marginLeft: 22}}>
-              <TouchableOpacity onPress={() => this.RBSheetReminder.open()}>
-                <Image
-                  style={EditeNoteScreenCss.reminderpluspic}
-                  source={require('../Assets/icons/reminderplus.png')}
-                />
-              </TouchableOpacity>
-            </View>
-            <RBSheet
-              ref={ref => {
-                this.RBSheetReminder = ref;
-              }}
-              height={235}
-              customStyles={{
-                container: {
-                  backgroundColor: this.state.color,
-                },
-              }}>
-              <View>
-                <TouchableOpacity>
-                  <View
-                    style={{
-                      justifyContent: 'space-between',
-                      flexDirection: 'row',
-                    }}>
-                    <View style={EditeNoteScreenCss.imageView}>
-                      <Image
-                        style={EditeNoteScreenCss.watchImg}
-                        source={require('../Assets/icons/watch1.png')}
-                      />
-                      <Text style={{marginLeft: 30}}>Later today</Text>
-                    </View>
-                    <Text style={{marginRight: 20, marginTop: 10}}>
-                      6.00 pm
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity>
-                  <View
-                    style={{
-                      justifyContent: 'space-between',
-                      flexDirection: 'row',
-                    }}>
-                    <View style={EditeNoteScreenCss.imageView}>
-                      <Image
-                        style={EditeNoteScreenCss.watchImg}
-                        source={require('../Assets/icons/watch1.png')}
-                      />
-                      <Text style={{marginLeft: 30}}>Tomorrow morning</Text>
-                    </View>
-                    <Text style={{marginRight: 20, marginTop: 10}}>
-                      8.00 am
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={this.toggleModal}>
-                  <View style={EditeNoteScreenCss.imageView}>
-                    <Image
-                      style={EditeNoteScreenCss.watchImg}
-                      source={require('../Assets/icons/watch1.png')}
-                    />
-                    <Text style={{marginLeft: 30}}>Choose a date & time</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </RBSheet>
-
-            <Modal isVisible={this.state.isModalVisible}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  borderRadius: 10,
-                  //alignItems: 'center',
-                }}>
-                <View
-                  style={{width: '80%', marginLeft: '10%', marginRight: '10%'}}>
-                  <Text style={{fontSize: 24, marginTop: 15}}>
-                    Add reminder
-                  </Text>
-                  <View style={{marginTop: 20}}>
-                    <TouchableOpacity onPress={this.showDate}>
-                      <Text>Select Date</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <DateTimePickerModal
-                    isVisible={this.state.isDatePickerVisible}
-                    mode="date"
-                    onConfirm={this.handleDate}
-                    onCancel={this.hideDate}
-                  />
-
-                  <View
-                    style={{
-                      backgroundColor: 'gray',
-                      height: 1,
-                      width: '100%',
-                      // marginLeft: '5%',
-                      // marginRight: '5%',
-                      marginTop: 10,
-                    }}></View>
-
-                  <View style={{marginTop: 20}}>
-                    <TouchableOpacity onPress={this.showTime}>
-                      <Text>Select Time</Text>
-                    </TouchableOpacity>
-                  </View>
-
-                  <DateTimePickerModal
-                    isVisible={this.state.isTime}
-                    mode="time"
-                    onConfirm={this.handleTime}
-                    onCancel={this.hideTime}
-                  />
-
-                  <View style={{flexDirection: 'row', marginBottom: 10}}>
-                    <Button
-                      uppercase={false}
-                      style={{marginTop: 40, marginLeft: '40%', width: '30%'}}
-                      mode="text"
-                      onPress={this.toggleModal}>
-                      <Text style={{color: 'blue'}}>Cancel</Text>
-                    </Button>
-
-                    <Button
-                      uppercase={false}
-                      style={{
-                        marginTop: 40,
-                        marginLeft: '1%',
-                        width: '30%',
-                        backgroundColor: 'blue',
-                        borderRadius: 20,
-                      }}
-                      mode="contained"
-                      onPress={this.handleSave}>
-                      <Text>Save</Text>
-                    </Button>
-                  </View>
-                </View>
-              </View>
-            </Modal>
+            <AddReminder
+              colorProps={this.state.color}
+              sendDateTime={(date, time, chip) =>
+                this.setState({
+                  selectedDate: date,
+                  selectedTime: time,
+                  dateTimeChipBoolean: chip,
+                })
+              }
+            />
 
             {/* ///////////////////////////////////////////////////////////////////////////////////////////////////////// */}
 
@@ -393,25 +257,48 @@ export default class CreateNoteScreen extends Component {
             onChangeText={this.handleNoteDescription}
           />
         </View>
+
         <View
           style={{
             flexWrap: 'wrap',
             marginLeft: 12,
             flexDirection: 'row',
-            marginRight: 10,
           }}
           key={this.state.labelDataArr.id}>
+          <View>
+            {this.state.dateTimeChipBoolean ? (
+              <View
+                style={{
+                  marginBottom: 10,
+                  backgroundColor: 'lightgrey',
+                  height: 30,
+                  borderRadius: 10,
+                  justifyContent: 'center',
+
+                  marginRight: 7,
+                }}>
+                <Text>
+                  {moment(this.state.selectedDate).format('D MMM') +
+                    ',' +
+                    moment(this.state.selectedTime).format('h:mm a')}
+                </Text>
+              </View>
+            ) : null}
+          </View>
+
           {this.state.labelDataArr.map(labelData => {
             //console.log('============================>>',addLabelDataArr);
+
             return (
               <View key={labelData.id}>
                 <TouchableOpacity
                   style={{
-                    backgroundColor: 'gray',
+                    backgroundColor: 'lightgrey',
                     borderRadius: 20,
                     justifyContent: 'center',
                     padding: 5,
                     marginRight: 5,
+                    marginBottom: 10,
                   }}>
                   <Text>{labelData}</Text>
                 </TouchableOpacity>
