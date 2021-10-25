@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "148030546764-er3pggphuhtcha2kf4hs0gr7dip2vk8a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fundoo_notes_rn",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
           "client_id": "148030546764-d0nfpkdqg2p8uf1u2n64hk83gahdq70g.apps.googleusercontent.com",
           "client_type": 3
         }
