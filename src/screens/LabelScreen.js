@@ -13,21 +13,20 @@ import firestore from '@react-native-firebase/firestore';
 
 //import { CheckBox } from 'react-native-elements'
 
-export default function LabelScreen({props,  route, navigation }) {
-///********************************************************************************** */
-    /* 2. Get the param */
-    // const { BooleanDarawerData } = route.params;
-    // console.log('itemId: {JSON.stringify(itemId)}',JSON.stringify(BooleanDarawerData));
+export default function LabelScreen({props, route, navigation}) {
+  ///********************************************************************************** */
+  /* 2. Get the param */
 
+  //const  BooleanDarawerData  = route?.params?.BooleanDarawerData;
+  //console.log('itemId: {JSON.stringify(itemId)}',BooleanDarawerData ? JSON.stringify(BooleanDarawerData):null);
 
-    
   const [labelText, setlabelText] = useState('');
   const [labelArray, setlabelArray] = useState([]);
   const [checked, setChecked] = useState(false);
   const [LabbelArr, setLabbelArr] = useState([]);
   const [labelArrDataState, setlabelArrDataState] = useState([]);
 
- // const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   //console.log('checked1',checked);
 
@@ -63,7 +62,6 @@ export default function LabelScreen({props,  route, navigation }) {
       setlabelArray(res);
     });
 
-   
     // const {BooleanDarawerData} = props.params;
     // console.log(
     //   'BooleanDarawerBooleanDarawerBooleanDarawer',
@@ -74,6 +72,7 @@ export default function LabelScreen({props,  route, navigation }) {
     // return unsubscribe;
   }, []);
 
+ 
   return (
     <View style={LabelCss.container1}>
       <View style={LabelCss.container2}>

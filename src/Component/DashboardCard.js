@@ -68,14 +68,15 @@ export default function DashboardCard(props) {
             <View key={note.id}>
               <TouchableOpacity onPress={() => navigateEditScreen(note)}>
                 <Card containerStyle={props.gridListdata ? gridView : listView}>
-                  <Text style={{fontWeight:'bold',fontSize:15}}>{note._data.Title}</Text>
+                  <Text style={{fontWeight: 'bold', fontSize: 15}}>
+                    {note._data.Title}
+                  </Text>
                   <Text>{note._data.Description} </Text>
 
                   <View
                     style={{
                       flexWrap: 'wrap',
                       flexDirection: 'row',
-                      
                     }}>
                     {note._data.DateTimeChipBoolean ? (
                       <View
@@ -85,7 +86,7 @@ export default function DashboardCard(props) {
                           height: 30,
                           borderRadius: 10,
                           justifyContent: 'center',
-                          marginRight:5
+                          marginRight: 5,
                         }}>
                         <Text>
                           {note._data.Date},{note._data.Time}
@@ -93,8 +94,9 @@ export default function DashboardCard(props) {
                       </View>
                     ) : null}
                     {labelarr.map(labelData => {
+                      console.log('labelDataaaaaaaaaaaaaaaa', labelData.id);
+
                       return (
-                        // console.log('labelDataaaaaaaaaaaaaaaa',labelarr);
                         <View
                           style={{
                             backgroundColor: 'lightgrey',
@@ -102,7 +104,7 @@ export default function DashboardCard(props) {
                             justifyContent: 'center',
                             padding: 5,
                             marginBottom: 10,
-                            marginRight:5
+                            marginRight: 5,
                           }}>
                           <Text>{labelData}</Text>
                         </View>

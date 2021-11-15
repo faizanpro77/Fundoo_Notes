@@ -64,9 +64,6 @@ export default function EditeLabelScreen(props) {
   });
   return unsubscribe;
   }, [navigation]);
-
-
-
   
 
   return (

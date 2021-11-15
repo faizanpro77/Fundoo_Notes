@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TouchableOpacity, View, Image, TextInput, Text} from 'react-native';
+import {TouchableOpacity, View, Image, TextInput, Text,StatusBar} from 'react-native';
 import EditeNoteScreenCss, {passcolordata} from '../css/CreateNoteScreenCss';
 import {
   generateRandomIdData,
@@ -186,6 +186,7 @@ export default class CreateNoteScreen extends Component {
           width: '100%',
           backgroundColor: this.state.color,
         }}>
+          <StatusBar backgroundColor={this.state.color} hidden={false} barStyle="dark-content"  />
         <View style={EditeNoteScreenCss.container2}>
           <View>
             <TouchableOpacity

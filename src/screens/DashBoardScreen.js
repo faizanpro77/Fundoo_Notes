@@ -4,47 +4,40 @@ import React, {Component} from 'react';
 //import { DrawerActions} from '@react-navigation/native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {Card} from 'react-native-elements';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-} from 'react-native';
+import {View, Text, TouchableOpacity, Image, ScrollView,StatusBar} from 'react-native';
 // import {gridlistvalue} from '../Component/DashboardCard';
 import DashBoardCss from '../css/DashBoardCss';
 import DashboardCard from '../Component/DashboardCard';
 import Profile from '../Component/Profile';
-import { TextInput } from 'react-native-gesture-handler';
-import { getNotes, setAllCheckBoxValueFalse } from '../services/NotesServices';
-import { NodePath } from '@babel/traverse';
+import {TextInput} from 'react-native-gesture-handler';
+import {getNotes, setAllCheckBoxValueFalse} from '../services/NotesServices';
+import {NodePath} from '@babel/traverse';
 import {Avatar} from 'react-native-elements';
+import PinCard from '../Component/PinCard';
 
 class DashBoardScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       open: false,
-    searchText:'',
-    filterSearch:false,
-    notesdata:[],
-    filterArray:[],
-    note:[],
-    isSearching:false,
-    searchText: '',
-    note: [],
-    filterArr: [],
-    userprofile:'https://www.w3schools.com/howto/img_avatar.png',
-    imageUrlProps:'https://www.w3schools.com/howto/img_avatar.png',
-    avtarImage: 'https://www.w3schools.com/howto/img_avatar.png',
-    userprofileData:null,
-    userprofileCop:'',
-   
+      searchText: '',
+      filterSearch: false,
+      notesdata: [],
+      filterArray: [],
+      note: [],
+      isSearching: false,
+      searchText: '',
+      note: [],
+      filterArr: [],
+      userprofile: 'https://www.w3schools.com/howto/img_avatar.png',
+      imageUrlProps: 'https://www.w3schools.com/howto/img_avatar.png',
+      avtarImage: 'https://www.w3schools.com/howto/img_avatar.png',
+      userprofileData: null,
+      userprofileCop: '',
+      pinDataBoolean: true,
+      firstIf: false,
     };
   }
- 
-
-
 
   gridView = () => {
     this.setState({
@@ -57,38 +50,45 @@ class DashBoardScreen extends Component {
     this.props.navigation.navigate('CreateNote');
   };
 
- async componentDidMount(){
-
+  async componentDidMount() {
     // this.focusListener = this.props.navigation.addListener('focus', function() {
 
-  let asyimage= await AsyncStorage.getItem('userImage') 
+    let asyimage = await AsyncStorage.getItem('userImage');
 
-  this.setState({userprofile:asyimage})
-// });
-  
- //console.log('asyimageeeeeeeeeee',asyimage);
-}
+    this.setState({userprofile: asyimage});
+    // });
 
+    //console.log('asyimageeeeeeeeeee',asyimage);
+  }
 
-  
-handlesearch=()=>{
-  this.props.navigation.navigate('SearchNote')
-}
+  handlesearch = () => {
+    this.props.navigation.navigate('SearchNote');
+  };
 
+  handleProfiledata = imgurl => {
+    // this.setState({imageUrlProps:imgurl})
+    this.setState({userprofile: imgurl});
 
-handleProfiledata=(imgurl)=>{
- // this.setState({imageUrlProps:imgurl})
-  this.setState({userprofile:imgurl})
-  
- // console.log('////////////////////',this.state.userprofile);
-  
-   }
+    // console.log('////////////////////',this.state.userprofile);
+  };
 
-
+  // CheckPin = val => {
+  //   if (!this.state.firstIf) {
+  //     this.setState({pinDataBoolean: val}, () =>
+  //       console.log('++++++++++++++++++++>>>>', this.state.pinDataBoolean),
+  //     );
+  //     this.setState({firstIf: true});
+  //   }
+  // };
 
   render() {
     return (
       <View style={DashBoardCss.container1}>
+        <StatusBar
+          backgroundColor="white"
+          hidden={false}
+          barStyle='dark-content'
+        />
         <View style={DashBoardCss.header}>
           <Card containerStyle={DashBoardCss.card}>
             <View style={DashBoardCss.navBar}>
@@ -134,7 +134,11 @@ handleProfiledata=(imgurl)=>{
                   <TouchableOpacity onPress={() => this.RBSheet.open()}>
                     <Image
                       style={DashBoardCss.profileImg}
-                      source={{uri: this.state.userprofile?this.state.userprofile:this.state.avtarImage}}
+                      source={{
+                        uri: this.state.userprofile
+                          ? this.state.userprofile
+                          : this.state.avtarImage,
+                      }}
                     />
                   </TouchableOpacity>
                   <RBSheet
@@ -142,8 +146,8 @@ handleProfiledata=(imgurl)=>{
                       this.RBSheet = ref;
                     }}
                     height={260}>
-                      {/* <Profile /> */}
-                      <Profile  profileImageprops={this.handleProfiledata} />
+                    {/* <Profile /> */}
+                    <Profile profileImageprops={this.handleProfiledata} />
                   </RBSheet>
                 </View>
               </View>
@@ -152,7 +156,20 @@ handleProfiledata=(imgurl)=>{
         </View>
 
         <ScrollView style={{marginBottom: 60}}>
-          <DashboardCard gridListdata={this.state.open} seachNoteData={this.state.searchText} />
+          {/* {this.state.pinDataBoolean ? ( */}
+
+          {/* <View > */}
+          <Text style={{marginLeft: 30, marginTop: 20}}>Pin</Text>
+          {/* <PinCard pinBoolean={this.CheckPin} /> */}
+          <PinCard gridListdata={this.state.open} />
+
+          <Text style={{marginLeft: 30, marginTop: 20}}>others</Text>
+          {/* </View>
+          ) : null} */}
+          <DashboardCard
+            gridListdata={this.state.open}
+            seachNoteData={this.state.searchText}
+          />
         </ScrollView>
 
         <View style={DashBoardCss.footerContainer}>
@@ -210,4 +227,3 @@ handleProfiledata=(imgurl)=>{
 }
 
 export default DashBoardScreen;
-

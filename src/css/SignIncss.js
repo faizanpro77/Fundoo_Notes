@@ -60,7 +60,31 @@ const styles = StyleSheet.create({
     },
     SignIntxt: {
         fontSize: 17
+    },
+    GoolebuttonSignInView: {
+        marginTop:25,
+        backgroundColor: 'white',
+        height: 50,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 5,
+        flexDirection:'row',
+        
+        
+        
+    },
+    GooleSignIntxt: {
+        fontSize: 17,
+        fontWeight:'bold',
+        marginLeft:10
+    },
+    GoogleImg:{
+        height:30,
+        width:30,
+        
     }
+
 
 
 });

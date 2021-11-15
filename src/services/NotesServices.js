@@ -321,3 +321,13 @@ export const updateNotificationId=(key,notificationPushId)=>{
   }
   firestore().collection('notes').doc(key).update(notificationId)
 }
+
+export const handleDeleteService=(id)=>{
+  firestore()
+  .collection('Label')
+  .doc(id)
+  .delete()
+  .then(() => {
+    console.log('User deleted!');
+  });
+}
