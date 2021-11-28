@@ -4,7 +4,14 @@ import React, {Component} from 'react';
 //import { DrawerActions} from '@react-navigation/native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {Card} from 'react-native-elements';
-import {View, Text, TouchableOpacity, Image, ScrollView,StatusBar} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  StatusBar,
+} from 'react-native';
 // import {gridlistvalue} from '../Component/DashboardCard';
 import DashBoardCss from '../css/DashBoardCss';
 import DashboardCard from '../Component/DashboardCard';
@@ -14,6 +21,7 @@ import {getNotes, setAllCheckBoxValueFalse} from '../services/NotesServices';
 import {NodePath} from '@babel/traverse';
 import {Avatar} from 'react-native-elements';
 import PinCard from '../Component/PinCard';
+//import { firstNameLastName } from '../services/UserServices';
 
 class DashBoardScreen extends Component {
   constructor(props) {
@@ -39,11 +47,11 @@ class DashBoardScreen extends Component {
     };
   }
 
-  gridView = () => {
-    this.setState({
-      open: !this.state.open,
-    });
-  };
+  // gridView = () => {
+  //   this.setState({
+  //     open: !this.state.open,
+  //   });
+  // };
 
   navigateCreateNOteScreen = () => {
     setAllCheckBoxValueFalse();
@@ -57,19 +65,11 @@ class DashBoardScreen extends Component {
 
     this.setState({userprofile: asyimage});
     // });
-
-    //console.log('asyimageeeeeeeeeee',asyimage);
   }
-
-  handlesearch = () => {
-    this.props.navigation.navigate('SearchNote');
-  };
 
   handleProfiledata = imgurl => {
     // this.setState({imageUrlProps:imgurl})
     this.setState({userprofile: imgurl});
-
-    // console.log('////////////////////',this.state.userprofile);
   };
 
   // CheckPin = val => {
@@ -80,80 +80,21 @@ class DashBoardScreen extends Component {
   //     this.setState({firstIf: true});
   //   }
   // };
-
+  handleGrideData = data => {
+    console.log('gridddddddddddddddd', data);
+    this.setState({
+      open: data,
+    });
+  };
   render() {
     return (
       <View style={DashBoardCss.container1}>
         <StatusBar
           backgroundColor="white"
           hidden={false}
-          barStyle='dark-content'
+          barStyle="dark-content"
         />
-        <View style={DashBoardCss.header}>
-          <Card containerStyle={DashBoardCss.card}>
-            <View style={DashBoardCss.navBar}>
-              <View style={{flexDirection: 'row'}}>
-                <View style={DashBoardCss.menueImgview}>
-                  <TouchableOpacity
-                    onPress={() => this.props.navigation.openDrawer()}>
-                    <Image
-                      style={DashBoardCss.menueImg}
-                      source={require('../Assets/icons/menu.png')}
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <TouchableOpacity onPress={this.handlesearch}>
-                    <Text>Search your notes</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={DashBoardCss.listprofileview}>
-                {this.state.open ? (
-                  <View style={DashBoardCss.listImgview}>
-                    <TouchableOpacity onPress={() => this.gridView()}>
-                      <Image
-                        style={DashBoardCss.listImg}
-                        source={require('../Assets/icons/grid.png')}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <View style={DashBoardCss.listImgview}>
-                    <TouchableOpacity onPress={() => this.gridView()}>
-                      <Image
-                        style={DashBoardCss.listImg}
-                        source={require('../Assets/icons/list.png')}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                )}
-
-                <View>
-                  <TouchableOpacity onPress={() => this.RBSheet.open()}>
-                    <Image
-                      style={DashBoardCss.profileImg}
-                      source={{
-                        uri: this.state.userprofile
-                          ? this.state.userprofile
-                          : this.state.avtarImage,
-                      }}
-                    />
-                  </TouchableOpacity>
-                  <RBSheet
-                    ref={ref => {
-                      this.RBSheet = ref;
-                    }}
-                    height={260}>
-                    {/* <Profile /> */}
-                    <Profile profileImageprops={this.handleProfiledata} />
-                  </RBSheet>
-                </View>
-              </View>
-            </View>
-          </Card>
-        </View>
+        <Profile ListData={this.handleGrideData} />
 
         <ScrollView style={{marginBottom: 60}}>
           {/* {this.state.pinDataBoolean ? ( */}

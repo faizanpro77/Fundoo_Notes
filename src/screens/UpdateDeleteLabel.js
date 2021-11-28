@@ -3,15 +3,15 @@
 import React, {useEffect, useState} from 'react';
 import {Image, Text, TextInput, View, TouchableOpacity} from 'react-native';
 import LabelCss from '../css/UpdateDeleteLabelCss';
-import CheckBox, {CheckBoxBase} from '@react-native-community/checkbox';
+//import CheckBox, {CheckBoxBase} from '@react-native-community/checkbox';
 import {
   addLabel,
-  EditLabelForEditeLabelScreen1,
+ // EditLabelForEditeLabelScreen1,
   getLabel,
   handleDeleteService,
   updateCheck,
 } from '../services/NotesServices';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+//import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import IconFeather from 'react-native-vector-icons/Feather';
 import IconeMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -61,12 +61,13 @@ export default function UpdateDeleteLabel({props, route, navigation}) {
   };
 
   useEffect(() => {
-    //const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener('focus', () => {
     getLabel().then(res => {
       setlabelArray(res);
     });
 
-    // return unsubscribe;
+     return unsubscribe;
+  })
   }, []);
 
   const handleCrossCheck = () => {

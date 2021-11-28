@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {TouchableOpacity, View, Image, TextInput, Text,StatusBar} from 'react-native';
+import {
+  TouchableOpacity,
+  View,
+  Image,
+  TextInput,
+  Text,
+  StatusBar,
+} from 'react-native';
 import EditeNoteScreenCss, {passcolordata} from '../css/CreateNoteScreenCss';
 import {
   generateRandomIdData,
@@ -9,24 +16,35 @@ import {
 import Snackbar from 'react-native-snackbar';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ColorChager from '../Component/Color';
-//import {getNotes} from '../services/NotesServices';
-//import Modal from 'react-native-modal';
-//import {Button} from 'react-native-paper';
-//import DateTimePickerModal from 'react-native-modal-datetime-picker';
-//import {Chip} from 'react-native-paper';
 import moment from 'moment';
 import AddReminder from '../Component/AddReminder';
 import PushNotification from 'react-native-push-notification';
-//import firestore from '@react-native-firebase/firestore';
-//import Icon from 'react-native-vector-icons/FontAwesome';
+import IconeMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconeMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import IconeIonicons from 'react-native-vector-icons/Ionicons';
+import IconeAntDesign from 'react-native-vector-icons/AntDesign';
+
+
 
 export default class CreateNoteScreen extends Component {
   constructor(props) {
     super(props);
+    //***const {params} = this.props?.route;
+    //    const params = this.props?.route?.params
+
+    // console.log(
+    //   'llllllllllllllllll',
+    //   params?.displayNoteData?._data?.Title || '',
+    // );
+  
+    
     this.state = {
+      //** */ title: params?.displayNoteData?._data?.Title || '',
+     
       title: '',
       description: '',
       color: 'white',
+
       trash: false,
       pin: false,
       archive: false,
@@ -44,6 +62,7 @@ export default class CreateNoteScreen extends Component {
       momentFormateDate: '',
       momentFormateTime: '',
       RandomId: '',
+      // key:''
     };
   }
 
@@ -98,6 +117,32 @@ export default class CreateNoteScreen extends Component {
       this.handleLocalPushNotification();
     }
 
+    // if (params?.edite) {
+    //   if (
+    //     this.state.title != '' &&
+    //     this.state.description != '' &&
+    //     this.state.color != ''
+    //   )
+    //     var response = editNoteDataUpdate(
+    //       this.state.key,
+    //       this.state.title,
+    //       this.state.description,
+    //       this.state.color,
+    //       this.state.trash,
+    //       this.state.pin,
+    //       this.state.archive,
+    //       this.state.labelArrayfromLabelArr,
+    //     );
+    //   this.props.navigation.navigate('DashBoard'); //goBack()
+    //   if (this.state.timeDateBoolean1 == true) {
+    //     editNoteDataUpdateTimeDate(
+    //       this.state.key,
+    //       moment(this.state.selectedDate).format('D MMM'),
+    //       moment(this.state.selectedTime).format('h:mm a'),
+    //       this.state.timeDateBoolean,
+    //     );
+    //   }
+    // } else {
     if (
       this.state.title != '' &&
       this.state.description != '' &&
@@ -138,6 +183,7 @@ export default class CreateNoteScreen extends Component {
         },
       });
     }
+    // }
   };
 
   componentDidUpdate() {
@@ -153,7 +199,7 @@ export default class CreateNoteScreen extends Component {
 
   generateRandomId = () => {
     let randomId = generateRandomIdData();
-   // console.log('randomIdrandomId', randomId);
+    // console.log('randomIdrandomId', randomId);
     this.setState({RandomId: randomId});
   };
 
@@ -177,6 +223,8 @@ export default class CreateNoteScreen extends Component {
 
   render() {
     var addLabelDataArr = [];
+    // const {displayNoteData} = this.props.route.params;
+    // console.log('4444444444444',displayNoteData._data.Title);
 
     return (
       // <View style={EditeNoteScreenCss.container1}>
@@ -186,14 +234,24 @@ export default class CreateNoteScreen extends Component {
           width: '100%',
           backgroundColor: this.state.color,
         }}>
-          <StatusBar backgroundColor={this.state.color} hidden={false} barStyle="dark-content"  />
+        {/* <Text>
+          99999999
+          {displayNoteData._data.Title}
+        </Text> */}
+        <StatusBar
+          backgroundColor={this.state.color}
+          hidden={false}
+          barStyle="dark-content"
+        />
         <View style={EditeNoteScreenCss.container2}>
           <View>
             <TouchableOpacity
               onPress={event => this.backArrow(addLabelDataArr)}>
-              <Image
+              <IconeIonicons
                 style={EditeNoteScreenCss.backArrowpic}
-                source={require('../Assets/icons/backArrow.png')}
+                name="arrow-back"
+                size={25}
+                color={'black'}
               />
             </TouchableOpacity>
           </View>
@@ -202,16 +260,18 @@ export default class CreateNoteScreen extends Component {
             <View>
               {this.state.pin ? (
                 <TouchableOpacity onPress={this.handlePin}>
-                  <Image
-                    style={EditeNoteScreenCss.pinpic}
-                    source={require('../Assets/icons/unpin.png')}
+                  <IconeMaterialCommunityIcons
+                    name="pin"
+                    size={25}
+                    color={'black'}
                   />
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity onPress={this.handlePin}>
-                  <Image
-                    style={EditeNoteScreenCss.pinpic}
-                    source={require('../Assets/icons/pin.png')}
+                  <IconeMaterialCommunityIcons
+                    name="pin-outline"
+                    size={25}
+                    color={'black'}
                   />
                 </TouchableOpacity>
               )}
@@ -232,10 +292,8 @@ export default class CreateNoteScreen extends Component {
 
             <View style={{marginLeft: 22}}>
               <TouchableOpacity onPress={this.handleArchive}>
-                <Image
-                  style={EditeNoteScreenCss.archivepic}
-                  source={require('../Assets/icons/archive.png')}
-                />
+              <IconeIonicons name="archive-outline" size={25} color={'black'} />
+
               </TouchableOpacity>
             </View>
           </View>
@@ -248,6 +306,7 @@ export default class CreateNoteScreen extends Component {
             numberOfLines={1}
             maxLength={100}
             onChangeText={this.handleTitle}
+            value={this.state.title}
           />
 
           <TextInput
@@ -346,25 +405,56 @@ export default class CreateNoteScreen extends Component {
               ref={ref => {
                 this.RBSheetMore = ref;
               }}
-              height={235}
+              height={270}
               duration={1}>
               <TouchableOpacity onPress={this.handleTrash}>
-                <View style={{flexDirection: 'row'}}>
-                  <Image
-                    source={require('../Assets/icons/delete.png')}
-                    style={EditeNoteScreenCss.deletepic}
+                <View style={{flexDirection: 'row', height: 45}}>
+                  <IconeMaterialCommunityIcons
+                    style={{marginTop: 15, marginLeft: 10}}
+                    name="trash-can-outline"
+                    size={25}
+                    color={'black'}
                   />
-                  <Text style={{top: 15, marginLeft: 20}}>Delete</Text>
+                  <Text style={{top: 20, marginLeft: 20}}>Delete</Text>
                 </View>
               </TouchableOpacity>
+              <View style={{flexDirection: 'row'}}>
+                <IconeMaterialIcons
+                  style={{marginTop: 15, marginLeft: 10}}
+                  name="content-copy"
+                  size={23}
+                  color={'black'}
+                />
+                <Text style={{top: 20, marginLeft: 20}}>Make a copy</Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <IconeIonicons
+                  style={{marginTop: 15, marginLeft: 10}}
+                  name="share-social-outline"
+                  size={25}
+                  color={'black'}
+                />
+                <Text style={{top: 20, marginLeft: 20}}>Send</Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <IconeMaterialCommunityIcons
+                  style={{marginTop: 15, marginLeft: 10}}
+                  name="account-plus-outline"
+                  size={25}
+                  color={'black'}
+                />
+                <Text style={{top: 20, marginLeft: 20}}>Collaborator</Text>
+              </View>
 
               <TouchableOpacity onPress={this.handleLabel}>
-                <View style={{flexDirection: 'row'}}>
-                  <Image
-                    source={require('../Assets/icons/label1.png')}
-                    style={EditeNoteScreenCss.lebelpic}
+                <View style={{flexDirection: 'row', height: 45}}>
+                  <IconeMaterialIcons
+                    style={{marginTop: 15, marginLeft: 10}}
+                    name="label-outline"
+                    size={25}
+                    color={'black'}
                   />
-                  <Text style={{marginLeft: 30}}>Label</Text>
+                  <Text style={{top: 20, marginLeft: 20}}>Label</Text>
                 </View>
               </TouchableOpacity>
             </RBSheet>

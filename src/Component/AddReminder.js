@@ -6,7 +6,9 @@ import Modal from 'react-native-modal';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import EditeNoteScreenCss from '../css/CreateNoteScreenCss';
-import PushNotification from 'react-native-push-notification';
+//import PushNotification from 'react-native-push-notification';
+import IconeMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 export default class AddReminder extends Component {
   constructor(props) {
@@ -85,9 +87,14 @@ var timeAndDate = moment(dateLabel).startOf(timeLabel);
       <View>
         <View style={{marginLeft: 22}}>
           <TouchableOpacity onPress={() => this.RBSheetReminder.open()}>
-            <Image
+            {/* <Image
               style={EditeNoteScreenCss.reminderpluspic}
               source={require('../Assets/icons/reminderplus.png')}
+            /> */}
+            <IconeMaterialCommunityIcons
+            name='bell-plus-outline'
+            size={25}
+            color={'black'}
             />
           </TouchableOpacity>
         </View>

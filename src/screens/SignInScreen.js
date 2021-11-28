@@ -10,6 +10,7 @@ import {
   Button,
   TouchableOpacity,
   Touchable,
+  StatusBar
 } from 'react-native';
 import styles from '../css/SignIncss';
 import Global from '../css/Global';
@@ -64,7 +65,7 @@ class SignInScreen extends Component {
     if (response == 'success') {
       await AsyncStorage.setItem('Email', this.state.Email);
       var emialdatavalue = await AsyncStorage.getItem('Email');
-      console.log('asyncccccccc..........', emialdatavalue);
+      console.log('asyncccccccc1..........', emialdatavalue);
       Snackbar.show({
         text: 'login successfully',
         duration: Snackbar.LENGTH_INDEFINITE,
@@ -131,6 +132,11 @@ class SignInScreen extends Component {
   render() {
     return (
       <View style={styles.container1}>
+        <StatusBar
+        backgroundColor={'white'}
+        hidden={false}
+        barStyle={'dark-content'}
+        />
         <View style={Global.ImageLabelView}>
           <Image
             source={require('G:/@react native bridgelabz/Fundoo_Notes_RN/src/Assets/images/noteslogo.png')}
@@ -205,7 +211,7 @@ class SignInScreen extends Component {
                 style={styles.GoogleImg}
                 source={require('../Assets/icons/GoogleImg.png')}
               />
-              <Text style={styles.GooleSignIntxt}> Google SignOut</Text>
+              <Text style={styles.GooleSignIntxt}>Google SignOut</Text>
             </TouchableOpacity>
 
             <View style={styles.accountSignUpView}>

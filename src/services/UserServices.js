@@ -1,20 +1,46 @@
 import firestore from '@react-native-firebase/firestore';
+import Snackbar from 'react-native-snackbar';
+
 
 //add data  into firebase after signup
 export function signUp(signUPData) {
+  let success = 'success';
+  let fail = 'fail';
+  let response;
+  let docdata = true;
   firestore()
     .collection('Users')
     .add(signUPData)
-    .then(() => {
-      console.log('User added!');
-      console.warn('User added!');
-    })
-    .catch(() => {
-      console.warn(error);
-      console.log('hkjfsdkjhkfkdj jfdhskj');
+    .then(
+      () => {
+     // console.log('User added!');
+      //console.warn('User added!');
+    
+      Snackbar.show({
+        text: 'SignUP successfully',
+        duration: Snackbar.LENGTH_INDEFINITE,
+        action: {
+          text: 'UNDO',
+          textColor: 'green',
+        },
+      });
+        
+    }
+    )
+    .catch((err) => { 
+      Snackbar.show({
+        text: err + ' something went wrong',
+        duration: Snackbar.LENGTH_INDEFINITE,
+        action: {
+          text: 'UNDO',
+          textColor: 'red',
+        },
+      });
+        
     });
+ // console.log('flightttttttttttt', response);
+  return response;
 }
-
 
 //get email and password for user authentication at signIn time
 export async function signIn(emailData, PasswordData) {
@@ -80,7 +106,7 @@ export async function CheckEmail(emialdata1) {
   }
 }
 
-//update password...after forgot password 
+//update password...after forgot password
 export async function updatePassword(newPassword) {
   let updatesuccess = 'success';
   let updatefail = 'fail';
@@ -104,4 +130,4 @@ export async function updatePassword(newPassword) {
   return updateresponse;
 }
 
-
+//----------------------------

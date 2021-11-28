@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {View, Text, Image, TouchableOpacity, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -8,6 +8,11 @@ import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import DashBoardScreen from '../screens/DashBoardScreen';
 import {handleProfileUpdate} from '../services/NotesServices';
+import DashBoardCss from '../css/DashBoardCss';
+import {Card} from 'react-native-elements';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import Modal from 'react-native-modal';
+import IconeEntypo from 'react-native-vector-icons/Entypo';
 
 export default function Profile(props) {
   const navigation = useNavigation();
@@ -26,16 +31,47 @@ export default function Profile(props) {
   const [propsImage, setPropsImage] = useState(
     'https://www.w3schools.com/howto/img_avatar.png',
   );
+  // const[avtarImage,setavtarImage]=useState('https://www.w3schools.com/howto/img_avatar.png')
+  const [open, setopen] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const removeAsyncStorage = () => {
+    setModalVisible(!isModalVisible);
     AsyncStorage.clear();
     navigation.navigate('SignIn');
   };
+  //--------------
+  const firstNameLastName = async emailData => {
+    if (emailData != '') {
+      await firestore()
+        .collection('Users')
+        // Filter results
+        .where('Emial', '==', emailData)
+        .get()
+        .then(data => {
+          data.docs.forEach(async doc => {
+            var docdata = doc.exists;
+            setasyncFirstName(doc._data.firstName);
+            setasyncLastName(doc._data.lastName);
+            // console.log('5555555555555', doc._data.lastName);
+            //console.log('66666666666', doc._data.lastName);
+          });
+        })
+        .catch(error => {
+          console.log('something went wrong', error);
+        });
+    }
+  };
+
+  //------------
 
   useEffect(async () => {
     var asyncEmailValue = await AsyncStorage.getItem('Email');
+    firstNameLastName(asyncEmailValue);
+    var asyncEmailValue = await AsyncStorage.getItem('Email');
     var asyncFirstName = await AsyncStorage.getItem('firstName');
     var asyncLastName = await AsyncStorage.getItem('lastName');
+    // console.log('profilefirsttttttttttttt',);
 
     setasyncEmail(asyncEmailValue);
     setasyncFirstName(asyncFirstName);
@@ -43,7 +79,7 @@ export default function Profile(props) {
   }, [navigation]);
 
   const choosePhotoFromLibrary = () => {
-    console.log('choosePhotoFromLibrary........');
+    // console.log('choosePhotoFromLibrary........');
     ImagePicker.openPicker({
       width: 300,
       height: 400,
@@ -55,7 +91,7 @@ export default function Profile(props) {
   };
 
   const takePhotoFromCamera = () => {
-    console.log('takePhotoFromCamerajfjjjjjjjjj');
+    // console.log('takePhotoFromCamerajfjjjjjjjjj');
     ImagePicker.openCamera({
       width: 300,
       height: 400,
@@ -74,14 +110,13 @@ export default function Profile(props) {
       .where('Email', '==', asyncemail)
       .get()
       .then(data => {
-        //  console.log('888888888888', data);
-
         data.docs.forEach(doc => {
           var docdata = doc.exists;
 
           setUserData(doc.data());
-          // console.log('doccccccccccccccccccc',doc.data());
           setImage(doc.data().Image);
+          let profileuser = doc.data().Image;
+          let asyncset = AsyncStorage.setItem('userImage', profileuser);
 
           setprofileId(doc.id);
         });
@@ -89,7 +124,6 @@ export default function Profile(props) {
   };
 
   useEffect(() => {
-    //createImagecolleciton()
     getUserProfileImage();
   }, []);
 
@@ -118,87 +152,178 @@ export default function Profile(props) {
 
       return url;
     } catch (e) {
-      console.log('catchrrrrrrrrrrrreeeeee', e);
+      // console.log('catchrrrrrrrrrrrreeeeee', e);
       return null;
     }
   };
+  const handlesearch = () => {
+    navigation.navigate('SearchNote');
+  };
 
+  const gridView = () => {
+    // console.log('revertttttttttt');
+    let check = !open;
+    props.ListData(check);
+    setopen(check);
+  };
+
+  const refRBSheetProfile = useRef();
   return (
-    <View style={{flexDirection: 'row'}}>
-      <View style={{marginLeft: 20}}>
-        <TouchableOpacity>
-          <Avatar
-            style={{height: 35, width: 35, marginTop: 4}}
-            rounded
-            source={{
-              uri: image ? image : avtarImage,
-            }}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={{flexDirection: 'column', marginLeft: 40}}>
-        <Text style={{fontWeight: 'bold'}}>
-          {asyncFirstName} {asyncLastName}
-        </Text>
-        <Text>{asyncEmail}</Text>
-        <TouchableOpacity
-          style={{
-            backgroundColor: '#ffa500',
-            height: 35,
-            width: 230,
-            marginTop: 20,
-            borderRadius: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{fontSize: 17}} onPress={removeAsyncStorage}>
-            Lougout
-          </Text>
-        </TouchableOpacity>
+    <View>
+      <View style={DashBoardCss.header}>
+        <Card containerStyle={DashBoardCss.card}>
+          <View style={DashBoardCss.navBar}>
+            <View style={{flexDirection: 'row'}}>
+              <View style={DashBoardCss.menueImgview}>
+                <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                  <Image
+                    style={DashBoardCss.menueImg}
+                    source={require('../Assets/icons/menu.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View>
+                <TouchableOpacity onPress={handlesearch}>
+                  <Text>Search your notes</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-        <TouchableOpacity
-          onPress={takePhotoFromCamera}
-          style={{
-            backgroundColor: '#ffa500',
-            height: 35,
-            width: 230,
-            marginTop: 20,
-            borderRadius: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{fontSize: 17}}>Take photo</Text>
-        </TouchableOpacity>
+            <View style={DashBoardCss.listprofileview}>
+              {open ? (
+                <View style={DashBoardCss.listImgview}>
+                  <TouchableOpacity onPress={() => gridView()}>
+                    <Image
+                      style={DashBoardCss.listImg}
+                      source={require('../Assets/icons/grid.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View style={DashBoardCss.listImgview}>
+                  <TouchableOpacity onPress={() => gridView()}>
+                    <Image
+                      style={DashBoardCss.listImg}
+                      source={require('../Assets/icons/list.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
 
-        <TouchableOpacity
-          onPress={choosePhotoFromLibrary}
-          style={{
-            backgroundColor: '#ffa500',
-            height: 35,
-            width: 230,
-            marginTop: 20,
-            borderRadius: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{fontSize: 17}}>choose from library</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={uploadimage}
-          style={{
-            backgroundColor: '#ffa500',
-            height: 35,
-            width: 230,
-            marginTop: 20,
-            borderRadius: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 20,
-            alignItems: 'center',
-          }}>
-          <Text style={{fontSize: 17}}>Upload</Text>
-        </TouchableOpacity>
+              <View>
+                <TouchableOpacity
+                  onPress={() => setModalVisible(!isModalVisible)}>
+                  <Image
+                    style={DashBoardCss.profileImg}
+                    source={{
+                      uri: image ? image : avtarImage,
+                    }}
+                  />
+                </TouchableOpacity>
+                <Modal isVisible={isModalVisible}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      backgroundColor: 'white',
+                      height: '40%',
+                      borderRadius: 10,
+                    }}>
+                    <View style={{marginLeft: 20}}>
+                      <TouchableOpacity
+                        onPress={() => setModalVisible(!isModalVisible)}>
+                        <IconeEntypo name="cross" size={25} color={'black'} />
+                      </TouchableOpacity>
+                      <Avatar
+                        style={{height: 35, width: 35, marginTop: 15}}
+                        rounded
+                        source={{
+                          uri: image ? image : avtarImage,
+                        }}
+                      />
+                    </View>
+                    <View style={{flexDirection: 'column', marginLeft: 20}}>
+                      <Text
+                        style={{
+                          fontWeight: 'bold',
+                          fontSize: 18,
+                          marginLeft: 40,
+                          color: 'crimson',
+                        }}>
+                        fundoo notes
+                      </Text>
+                      <Text style={{fontWeight: 'bold', marginTop: 10}}>
+                        {asyncFirstName} {asyncLastName}
+                      </Text>
+                      <Text>{asyncEmail}</Text>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: '#ffa500',
+                          height: 35,
+                          width: 230,
+                          marginTop: 20,
+                          borderRadius: 10,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Text
+                          style={{fontSize: 17}}
+                          onPress={removeAsyncStorage}>
+                          Lougout
+                        </Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        onPress={takePhotoFromCamera}
+                        style={{
+                          backgroundColor: '#ffa500',
+                          height: 35,
+                          width: 230,
+                          marginTop: 20,
+                          borderRadius: 10,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Text style={{fontSize: 17}}>Take photo</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        onPress={choosePhotoFromLibrary}
+                        style={{
+                          backgroundColor: '#ffa500',
+                          height: 35,
+                          width: 230,
+                          marginTop: 20,
+                          borderRadius: 10,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Text style={{fontSize: 17}}>choose from library</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={uploadimage}
+                        style={{
+                          backgroundColor: '#ffa500',
+                          height: 35,
+                          width: 230,
+                          marginTop: 20,
+                          borderRadius: 10,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          marginTop: 20,
+                          alignItems: 'center',
+                        }}>
+                        <Text style={{fontSize: 17}}>Upload</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Modal>
+              </View>
+            </View>
+          </View>
+        </Card>
       </View>
+
+      {}
     </View>
   );
 }

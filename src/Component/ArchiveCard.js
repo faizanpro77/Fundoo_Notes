@@ -29,7 +29,7 @@ export default function ArchiveCard(props) {
     setAllCheckBoxValueFalse();
     //console.log('navigateEditScreennnnnnnnnn');
     navigation.navigate('EditNOte', {
-      displayNoteData: note,
+      displayNoteData: note._data,
       key: note.id,
       CardBolean: false,
     });

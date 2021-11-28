@@ -7,6 +7,7 @@ import {
   Button,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import styles from '../css/SignUpcss';
 import Global from '../css/Global';
@@ -15,12 +16,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createImagecolleciton} from '../services/NotesServices';
 import SQLite from 'react-native-sqlite-storage';
 const db = SQLite.openDatabase(
-    {
-        name: 'MainDB',
-        location: 'default',
-    },
-    () => { },
-    error => { console.log(error) }
+  {
+    name: 'MainDB',
+    location: 'default',
+  },
+  () => {},
+  error => {
+    console.log(error);
+  },
 );
 class SignUpSceen extends Component {
   constructor(props) {
@@ -34,8 +37,9 @@ class SignUpSceen extends Component {
       EmailError: '',
       Password: '',
       PasswordError: '',
+      isLoading: false,
     };
-    this.createTable();
+    // this.createTable();
   }
 
   navigateSignIn = () => {
@@ -78,21 +82,23 @@ class SignUpSceen extends Component {
   };
 
   onSubmit = async () => {
-
-    this.getData()
+    // this.getData()
     let signUpData = {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       Emial: this.state.Email,
       Password: this.state.Password,
     };
-    let response = signUp(signUpData);
+    if(this.state.firstName!='' && this.state.lastName!='' && this.state.Email!=''){
+     signUp(signUpData);
+     this.setState({isLoading: true});
+     this.props.navigation.navigate('SignIn');
+    }
+    console.log('signuppppppppppppppppppppp');
     this.AsyncStoragedata();
     createImagecolleciton();
   };
 
-  
-  
   AsyncStoragedata = async () => {
     try {
       await AsyncStorage.setItem('Email', this.state.Email);
@@ -101,70 +107,62 @@ class SignUpSceen extends Component {
     } catch (err) {
       console.log(err);
     }
-    db.transaction(async(tx)=>{
-      await  tx.executeSql(
-            "INSERT INTO Users (FirstName,LastName)VALUES(?,?)",
-            [this.state.firstName,this.state.lastName]
-        )
-    })
+    // db.transaction(async(tx)=>{
+    //   await  tx.executeSql(
+    //         "INSERT INTO Users (FirstName,LastName)VALUES(?,?)",
+    //         [this.state.firstName,this.state.lastName]
+    //     )
+    // })
+  };
 
-   };
+  //     createTable = () => {
+  //     db.transaction((tx) => {
+  //         tx.executeSql(
+  //             "CREATE TABLE IF NOT EXISTS "
+  //             + "Users "
+  //             + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, FirstName TEXT, LastName TEXT);"
+  //         )
+  //     })
+  // }
 
- 
+  // componentDidMount() {
 
-    createTable = () => {
-    db.transaction((tx) => {
-        tx.executeSql(
-            "CREATE TABLE IF NOT EXISTS "
-            + "Users "
-            + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, FirstName TEXT, LastName TEXT);"
-        )
-    })
-}
+  // }
 
-  componentDidMount() {
-   
-  }
+  // getData=()=>{
+  //   db.transaction((tx) => {
+  //       tx.executeSql(
+  //           "SELECT FirstName, LastName FROM Users",
+  //           [],
+  //           (tx, results) => {
+  //               var len = results.rows.length;
+  //               if (len > 0) {
+  //                   console.log('grater than 0 jokes a part' ,len);
+  //                   var userFirstName = results.rows.item(1).FirstName;
+  //                   var userLastNamee = results.rows.item(0).LastName;
+  //                   console.log('userFirstNameuserFirstName',userFirstName);
+  //               }
 
+  //           }
+  //       )
+  //   })
 
-  getData=()=>{
-    db.transaction((tx) => {
-        tx.executeSql(
-            "SELECT FirstName, LastName FROM Users",
-            [],
-            (tx, results) => {
-                var len = results.rows.length;
-                if (len > 0) {
-                    console.log('grater than 0 jokes a part' ,len);
-                    var userFirstName = results.rows.item(1).FirstName;
-                    var userLastNamee = results.rows.item(0).LastName;
-                    console.log('userFirstNameuserFirstName',userFirstName);
-                }
-                
-            }
-        )
-    })
+  //   db.transaction((tx)=>{
+  //       tx.executeSql(
+  //           "SELECT FirstName,LastName FROM Users",
+  //           [],
+  //           (tx,results)=>{
+  //               var len=results.rows.length;
+  //               if(len >0){
+  //                var userFirstName = results.rows.item(0).FirstName;
+  //                var userLastNamee = results.rows.item(0).LastName;
+  //                console.log('userFirstNameuserFirstName',userFirstName);
+  //               }
 
-
-
-
-
-    //   db.transaction((tx)=>{
-    //       tx.executeSql(
-    //           "SELECT FirstName,LastName FROM Users",
-    //           [],
-    //           (tx,results)=>{
-    //               var len=results.rows.length;
-    //               if(len >0){
-    //                var userFirstName = results.rows.item(0).FirstName;
-    //                var userLastNamee = results.rows.item(0).LastName;
-    //                console.log('userFirstNameuserFirstName',userFirstName);
-    //               }
-                  
-    //           }
-    //       )
-    //   })
-  }
+  //           }
+  //       )
+  //   })
+  // }
 
   render() {
     return (
@@ -221,11 +219,28 @@ class SignUpSceen extends Component {
               </Text>
             </View>
 
-            <TouchableOpacity
-              style={styles.buttonSignUP}
-              onPress={this.onSubmit}>
-              <Text style={styles.SignUptxt}>SignUp</Text>
-            </TouchableOpacity>
+            {this.state.isLoading ? 
+            (
+              <TouchableOpacity style={styles.buttonSignUP}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <ActivityIndicator size={30} color={'white'} />
+                  <Text style={styles.SignUptxt}>Loading...</Text>
+                </View>
+              </TouchableOpacity>
+            ):(
+              <TouchableOpacity
+                style={styles.buttonSignUP}
+                onPress={this.onSubmit}>
+                <Text style={styles.SignUptxt}>SignUp</Text>
+                {/* <ActivityIndicator size={40} color={'blue'}/> */}
+              </TouchableOpacity>
+            ) 
+            }
 
             <View style={styles.TextView}>
               <Text>Have an account with us?</Text>

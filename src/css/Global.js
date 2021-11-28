@@ -5,8 +5,8 @@ const Global = StyleSheet.create({
          top: '10%'
     },
     ImageLogo: {
-        height: 40,
-        width: 40,
+        height: 70,
+        width: 70,
     },
     FundooNotestxt: {
         fontWeight: 'bold',

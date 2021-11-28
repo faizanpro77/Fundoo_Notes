@@ -1,14 +1,13 @@
 import React, {Component, useEffect, useState} from 'react';
 import {Card} from 'react-native-elements';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
-//import DashBoardCardCss from '../css/DashBoardCardCss';
 import {getNotes, setAllCheckBoxValueFalse} from '../services/NotesServices';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import moment from 'moment';
-import {not} from 'react-native-reanimated';
-//setAllCheckBoxValueFalse();
-//props.seachNoteData
 
+import {LogBox} from 'react-native';
+// LogBox.ignoreLogs([
+//   'Non-serializable values were found in the navigation state',
+// ]);
 export default function DashboardCard(props) {
   const [notes, setNotes] = useState([]);
   const [displayNoteData, setdisplayNoteData] = useState([]);
@@ -27,12 +26,14 @@ export default function DashboardCard(props) {
   var labelarr = [];
 
   const navigateEditScreen = note => {
+   // console.log('aaaaaaaaaaaaaaaaaaaa', note._data);
     setAllCheckBoxValueFalse();
     //console.log('navigateEditScreennnnnnnnnn');
     navigation.navigate('EditNOte', {
-      displayNoteData: note,
+      //CreateNote,//EditNOte
+      displayNoteData: note._data,
       key: note.id,
-      CardBolean: false,
+      edite: true,
     });
   };
   return (
@@ -93,11 +94,12 @@ export default function DashboardCard(props) {
                         </Text>
                       </View>
                     ) : null}
-                    {labelarr.map(labelData => {
-                      console.log('labelDataaaaaaaaaaaaaaaa', labelData.id);
+                    {labelarr.map((labelData, Index) => {
+                      // console.log('labelDataaaaaaaaaaaaaaaa', labelData,Index);
 
                       return (
                         <View
+                          key={Index}
                           style={{
                             backgroundColor: 'lightgrey',
                             borderRadius: 20,

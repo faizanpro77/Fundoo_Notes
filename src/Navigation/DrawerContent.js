@@ -22,25 +22,31 @@ import IconeFeather from 'react-native-vector-icons/Feather';
 import IconeAntDesign from 'react-native-vector-icons/AntDesign';
 import IconeMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {getLabel} from '../services/NotesServices';
+
 //import CustomDrawerCss from '../css/LabelScreenCss';
 
 export function DrawerContent({props, navigation}) {
   //const navigation = useNavigation();
   const [labelArray, setlabelArray] = useState([]);
+  // console.log('lllllllllllllllooooooo22');
 
+  //this componant rerender again again because i use use effecct as componentDidMount
   useEffect(() => {
     //const unsubscribe = navigation.addListener('focus', () => {
+    // console.log('lllllllllllllllooooooo1');
     getLabel().then(res => {
       setlabelArray(res);
     });
+
+    //  });
     // return unsubscribe;
-  }, []);
+  }, [labelArray]);
 
   return (
     <View style={{flex: 1}}>
       <DrawerContentScrollView {...props}>
         <View style={CustomDrawerCss.googlekeeptxtView}>
-          <Text style={CustomDrawerCss.keeptxt}>Google Keep</Text>
+          <Text style={CustomDrawerCss.keeptxt}>Fundoo Notes</Text>
         </View>
 
         <TouchableOpacity onPress={() => navigation.navigate('dashBoard')}>
@@ -51,7 +57,7 @@ export function DrawerContent({props, navigation}) {
               alignItems: 'center',
               height: 40,
             }}>
-            <IconAntDesign name="bulb1" size={20} color={'gray'} />
+            <IconAntDesign name="bulb1" size={20} color={'black'} />
             <Text style={{fontSize: 15, marginLeft: 20}}>Notes</Text>
           </View>
         </TouchableOpacity>
@@ -68,7 +74,7 @@ export function DrawerContent({props, navigation}) {
             <IconeIonicons
               name="notifications-outline"
               size={20}
-              color={'gray'}
+              color={'black'}
             />
             <Text style={{fontSize: 15, marginLeft: 20}}>Reminders</Text>
           </View>
@@ -90,16 +96,17 @@ export function DrawerContent({props, navigation}) {
 
         {
           /********************************************************************************************* */
-          labelArray.map(label => {
-           // console.log('iddddddddddddddddd', label.id + ' ' + Index);
+          labelArray.map((label, Index) => {
+            //  console.log('iddddddddddddddddd', label._data.Label + ' ' + Index);
             return (
               <TouchableOpacity
+                key={label.id}
                 onPress={() => navigation.navigate('dashBoard')}>
-                <View key={label.id} style={CustomDrawerCss.ImagelabeltxtView}>
+                <View style={CustomDrawerCss.ImagelabeltxtView}>
                   <IconeMaterialCommunityIcons
                     name="label-outline"
                     size={25}
-                    color={'gray'}
+                    color={'black'}
                   />
                   <Text style={CustomDrawerCss.labelpriority}>
                     {label._data.Label}
@@ -119,7 +126,7 @@ export function DrawerContent({props, navigation}) {
               alignItems: 'center',
               marginTop: 20,
             }}>
-            <IconeFeather name="plus" size={25} color={'gray'} />
+            <IconeFeather name="plus" size={25} color={'black'} />
             <Text style={{marginLeft: 16, fontSize: 15}}>Create new label</Text>
           </View>
         </TouchableOpacity>
@@ -140,7 +147,7 @@ export function DrawerContent({props, navigation}) {
               height: 40,
               marginTop: 10,
             }}>
-            <IconeIonicons name="archive-outline" size={20} color={'gray'} />
+            <IconeIonicons name="archive-outline" size={20} color={'black'} />
             <Text style={{fontSize: 15, marginLeft: 20}}>Archive</Text>
           </View>
         </TouchableOpacity>
@@ -154,10 +161,37 @@ export function DrawerContent({props, navigation}) {
               height: 40,
               marginTop: 10,
             }}>
-            <IconeAntDesign name="delete" size={20} color={'gray'} />
+            <IconeMaterialCommunityIcons
+              name="trash-can-outline"
+              size={20}
+              color={'black'}
+            />
             <Text style={{fontSize: 15, marginLeft: 20}}>Deleted</Text>
           </View>
         </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginLeft: 20,
+            alignItems: 'center',
+            height: 40,
+            marginTop: 10,
+          }}>
+          <IconeIonicons name="settings-outline" size={20} color={'black'} />
+          <Text style={{fontSize: 15, marginLeft: 20}}>Settings</Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginLeft: 20,
+            alignItems: 'center',
+            height: 40,
+            marginTop: 10,
+          }}>
+          <IconeIonicons name="help-circle-outline" size={20} color={'black'} />
+          <Text style={{fontSize: 15, marginLeft: 20}}>Helps & feedback</Text>
+        </View>
+
         <View
           style={{
             width: '100%',

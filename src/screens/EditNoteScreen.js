@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {TouchableOpacity, View, Image, TextInput, Text,StatusBar} from 'react-native';
+import {
+  TouchableOpacity,
+  View,
+  Image,
+  TextInput,
+  Text,
+  StatusBar,
+} from 'react-native';
 import EditeNoteScreenCss, {passcolordata} from '../css/CreateNoteScreenCss';
 import {
   deleteBooleanChipUpdate,
@@ -7,23 +14,17 @@ import {
   editNoteDataUpdate,
   editNoteDataUpdateTimeDate,
   generateRandomIdData,
-  getLabel,
-  noteData,
-  setAllCheckBoxValueFalse,
   updateNotificationId,
 } from '../services/NotesServices';
-import Snackbar from 'react-native-snackbar';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import ColorChager from '../Component/Color';
-import {getNotes} from '../services/NotesServices';
-import Modal from 'react-native-modal';
-import {Button} from 'react-native-paper';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import AddReminder from '../Component/AddReminder';
 import moment from 'moment';
 import PushNotification from 'react-native-push-notification';
-import firestore from '@react-native-firebase/firestore';
-
+import IconeMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconeMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import IconeIonicons from 'react-native-vector-icons/Ionicons';
+import IconeAntDesign from 'react-native-vector-icons/AntDesign';
 
 export default class EditNoteScreen extends Component {
   constructor(props) {
@@ -50,15 +51,15 @@ export default class EditNoteScreen extends Component {
       selectedTime: '',
       timeDateBoolean1: false,
       RandomId1: '',
-      RandomId:''
+      RandomId: '',
     };
   }
 
   //handle archive true false and nevigat dashbord
   handleArchive = () => {
     this.setState({archive: !this.state.archive}, () => {
-      console.warn('archiveeeeeeeee', this.state.archive)
-        // this.props.navigation.navigate('DashBoard');
+      console.warn('archiveeeeeeeee', this.state.archive);
+      // this.props.navigation.navigate('DashBoard');
     });
   };
 
@@ -70,8 +71,8 @@ export default class EditNoteScreen extends Component {
 
   handleTrash = () => {
     this.setState({trash: !this.state.trash}, () => {
-      console.warn('Trashhhhhhhhhhhh', this.state.trash)
-        // this.props.navigation.navigate('DashBoard');
+      console.log('Trashhhhhhhhhhhh', this.state.trash);
+      // this.props.navigation.navigate('DashBoard');
     });
   };
 
@@ -95,8 +96,6 @@ export default class EditNoteScreen extends Component {
 
   //send data to add into firebase
   backArrow = () => {
-    //  console.log('displayNoteDatadisplayNoteData',displayNoteData._data.RandomId);
-
     if (this.state.timeDateBoolean == true) {
       this.handleLocalPushNotification();
     }
@@ -148,11 +147,9 @@ export default class EditNoteScreen extends Component {
   };
 
   componentDidMount() {
-    this.generateRandomId()
-    const {displayNoteData, key, searchOpen, CardBolean} =
-      this.props.route.params;
+    this.generateRandomId();
+    const {displayNoteData, key, searchOpen} = this.props.route.params;
 
-    //if(CardBolean==true ){
     this.focusListener = this.props.navigation.addListener('focus', () => {
       const {labelArrDataState, labelArrayTrueFalse} = this.props.route.params;
       // console.log('2222222222222222',labelArrayTrueFalse);
@@ -163,7 +160,6 @@ export default class EditNoteScreen extends Component {
         this.setState({labelArrayfromLabelArr: this.state.labelArrData});
       }
     });
-    /// }
 
     if (searchOpen) {
       //console.log('keyyyyyyyyyyyyyyyyyy',key);
@@ -177,23 +173,26 @@ export default class EditNoteScreen extends Component {
         archive: displayNoteData.Archive,
         trash: displayNoteData.Trash,
         labelArrData: displayNoteData.LabelArr,
-
+        formateDate: displayNoteData.Date,
+        formateTime: displayNoteData.Time,
+        timeDateBoolean: displayNoteData.DateTimeChipBoolean,
+        RandomId1: displayNoteData.RandomId,
       });
       //console.log('keyyyyyyyyyy',displayNoteData)
     } else {
       this.setState({
         key: key,
-        title: displayNoteData._data.Title,
-        color: displayNoteData._data.Colour,
-        description: displayNoteData._data.Description,
-        pin: displayNoteData._data.Pin,
-        archive: displayNoteData._data.Archive,
-        trash: displayNoteData._data.Trash,
-        labelArrData: displayNoteData._data.LabelArr,
-        formateDate: displayNoteData._data.Date,
-        formateTime: displayNoteData._data.Time,
-        timeDateBoolean: displayNoteData._data.DateTimeChipBoolean,
-        RandomId1: displayNoteData._data.RandomId,
+        title: displayNoteData.Title,
+        color: displayNoteData.Colour,
+        description: displayNoteData.Description,
+        pin: displayNoteData.Pin,
+        archive: displayNoteData.Archive,
+        trash: displayNoteData.Trash,
+        labelArrData: displayNoteData.LabelArr,
+        formateDate: displayNoteData.Date,
+        formateTime: displayNoteData.Time,
+        timeDateBoolean: displayNoteData.DateTimeChipBoolean,
+        RandomId1: displayNoteData.RandomId,
       }); //() => console.log('displayNoteDatadisplayNoteData', this.state.RandomId1)
       //console.log('keyyyyyyyyyy',key)
     }
@@ -222,20 +221,23 @@ export default class EditNoteScreen extends Component {
 
   generateRandomId = () => {
     let randomId = generateRandomIdData();
-    console.log('randomIdrandomId', randomId);
-    this.setState({RandomId: randomId},()=>console.log('ttttttt11111ttttttttt',this.state.RandomId));
+   // console.log('randomIdrandomId', randomId);
+    this.setState({RandomId: randomId}, 
+      // () =>
+      // console.log('ttttttt11111ttttttttt', this.state.RandomId),
+    );
   };
 
   handleLocalPushNotification = () => {
     // PushNotification.cancelAllLocalNotifications();
-        updateNotificationId(this.state.key,this.state.RandomId)
+    updateNotificationId(this.state.key, this.state.RandomId);
     if (this.state.timeDateBoolean1 == true) {
       if (this.state.selectedDate != null && this.state.selectedDate != null) {
         let date = JSON.stringify(this.state.selectedDate).slice(1, 11);
         let time = JSON.stringify(this.state.selectedTime).slice(11, 25);
         let dateShedule = new Date(date + time);
         PushNotification.localNotificationSchedule({
-          id:this.state.RandomId,
+          id: this.state.RandomId,
           channelId: 'test-channel',
           title: this.state.title,
           message: this.state.description,
@@ -246,7 +248,7 @@ export default class EditNoteScreen extends Component {
   };
 
   deleteBooleanUpdate = deleteBoolean => {
-   // console.log('displayNoteDatadisplayNoteData', this.state.RandomId1);
+    // console.log('displayNoteDatadisplayNoteData', this.state.RandomId1);
     PushNotification.cancelLocalNotification({id: this.state.RandomId1});
     this.setState({timeDateBoolean: deleteBoolean}, () =>
       deleteBooleanChipUpdate(this.state.key, this.state.timeDateBoolean),
@@ -262,13 +264,19 @@ export default class EditNoteScreen extends Component {
           width: '100%',
           backgroundColor: this.state.color,
         }}>
-          <StatusBar backgroundColor={this.state.color} hidden={false} barStyle='default'/>
+        <StatusBar
+          backgroundColor={this.state.color}
+          hidden={false}
+          barStyle="default"
+        />
         <View style={EditeNoteScreenCss.container2}>
           <View>
             <TouchableOpacity onPress={this.backArrow}>
-              <Image
+              <IconeIonicons
                 style={EditeNoteScreenCss.backArrowpic}
-                source={require('../Assets/icons/backArrow.png')}
+                name="arrow-back"
+                size={25}
+                color={'black'}
               />
             </TouchableOpacity>
           </View>
@@ -463,25 +471,57 @@ export default class EditNoteScreen extends Component {
               ref={ref => {
                 this.RBSheetMore = ref;
               }}
-              height={235}
+              height={270}
               duration={1}>
               <TouchableOpacity onPress={this.handleTrash}>
-                <View style={{flexDirection: 'row'}}>
-                  <Image
-                    source={require('../Assets/icons/delete.png')}
-                    style={EditeNoteScreenCss.deletepic}
+                <View style={{flexDirection: 'row', height: 45}}>
+                  <IconeMaterialCommunityIcons
+                    style={{marginTop: 10, marginLeft: 10}}
+                    name="trash-can-outline"
+                    size={25}
+                    color={'black'}
                   />
                   <Text style={{top: 15, marginLeft: 20}}>Delete</Text>
                 </View>
               </TouchableOpacity>
+              <View style={{flexDirection: 'row'}}>
+                <IconeMaterialIcons
+                  style={{marginTop: 10, marginLeft: 10}}
+                  name="content-copy"
+                  size={23}
+                  color={'black'}
+                />
+
+                <Text style={{top: 15, marginLeft: 20}}>Make a copy</Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <IconeIonicons
+                  style={{marginTop: 10, marginLeft: 10}}
+                  name="share-social-outline"
+                  size={25}
+                  color={'black'}
+                />
+                <Text style={{top: 15, marginLeft: 20}}>Send</Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <IconeMaterialCommunityIcons
+                  style={{marginTop: 10, marginLeft: 10}}
+                  name="account-plus-outline"
+                  size={25}
+                  color={'black'}
+                />
+                <Text style={{top: 15, marginLeft: 20}}>Collaborator</Text>
+              </View>
 
               <TouchableOpacity onPress={this.handleLabel}>
-                <View style={{flexDirection: 'row'}}>
-                  <Image
-                    source={require('../Assets/icons/label1.png')}
-                    style={EditeNoteScreenCss.lebelpic}
+                <View style={{flexDirection: 'row', height: 45}}>
+                  <IconeMaterialIcons
+                    style={{marginTop: 10, marginLeft: 10}}
+                    name="label-outline"
+                    size={25}
+                    color={'black'}
                   />
-                  <Text style={{marginLeft: 30}}>Label</Text>
+                  <Text style={{top: 15, marginLeft: 20}}>Label</Text>
                 </View>
               </TouchableOpacity>
             </RBSheet>

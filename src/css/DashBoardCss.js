@@ -40,8 +40,8 @@ const DashBoardCss = StyleSheet.create({
   },
 
   profileImg: {
-    height: 25,
-    width: 25,
+    height: 30,
+    width: 30,
     borderRadius:20  
   },
 

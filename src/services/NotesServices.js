@@ -207,9 +207,11 @@ export const createImagecolleciton = async () => {
       Image: 'https://www.w3schools.com/howto/img_avatar.png' || '',
     })
     .then(() => {
-      console.warn('user img added');
+     // console.warn('user img added');
     })
-    .catch(console.warn('user img not added'));
+    .catch(
+     // console.log('user img not added')
+      );
 };
 
 export const handleProfileUpdate = (url, profileId) => {
