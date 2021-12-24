@@ -42,7 +42,7 @@ export default class SplashScreen extends Component {
   }
 
   createChannels=()=>{
-    console.log('splash timer');
+    //console.log('splash timer');
     PushNotification.createChannel({
       channelId:'test-channel',
       channelName:'Test Channel'

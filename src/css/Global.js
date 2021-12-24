@@ -2,7 +2,8 @@ import { StyleSheet } from 'react-native'
 const Global = StyleSheet.create({
     ImageLabelView: {
         alignItems: 'center',
-         top: '10%'
+         top: 30
+         
     },
     ImageLogo: {
         height: 70,

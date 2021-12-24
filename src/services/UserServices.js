@@ -131,3 +131,37 @@ export async function updatePassword(newPassword) {
 }
 
 //----------------------------
+
+
+// export async function signInOnlyForCheck(emailData4, PasswordData) {
+//   if (emailData4 != '') {
+//     // console.log('emailData = ',emailData)
+//     // console.log('PasswordData = ',PasswordData)
+//     // let success = 'success';
+//     // let fail = 'fail';
+//     let response = 'fail';
+
+//     await firestore()
+//       .collection('Users')
+//       // Filter results
+//       .where('Emial', '==', emailData4)
+//       .where('Password', '==', PasswordData)
+//       .get()
+//       .then(data => {
+//         data.docs.forEach(doc => {
+//           var docdata = doc.exists;
+//           // console.log('????????????',docdata)
+
+//           if (docdata) {
+//              response = 'success';
+//              break;
+//           }
+//         });
+//       })
+//       .catch(error => {
+//         return error;
+//       });
+//     // console.log('////////////',response)
+//     return response;
+//   }
+// }

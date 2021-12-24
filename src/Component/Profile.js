@@ -13,6 +13,9 @@ import {Card} from 'react-native-elements';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Modal from 'react-native-modal';
 import IconeEntypo from 'react-native-vector-icons/Entypo';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+//import {signIn} from '../services/UserServices';
+import auth from '@react-native-firebase/auth';
 
 export default function Profile(props) {
   const navigation = useNavigation();
@@ -34,13 +37,36 @@ export default function Profile(props) {
   // const[avtarImage,setavtarImage]=useState('https://www.w3schools.com/howto/img_avatar.png')
   const [open, setopen] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [checkGoogle,setcheckGoogle] = useState('')
 
   const removeAsyncStorage = () => {
     setModalVisible(!isModalVisible);
     AsyncStorage.clear();
+
+    googleSignout();
+
     navigation.navigate('SignIn');
   };
   //--------------
+  googleSignout = async () => {
+    
+    // var checkGoogle =await AsyncStorage.getItem('googleCheck')
+    console.log('-----------------000000',checkGoogle);
+    if (checkGoogle == 'true') {
+      console.log('lougouttttttttttttttttt');
+      try {
+        await GoogleSignin.signOut().then(function () {
+          console.log('Signout Succesfull');
+          Alert.alert('Signout Succesful');
+        });
+        // this.setState({user: null}); // Remember to remove the user from your app's state as well
+      } catch (error) {
+        console.error(error);
+      }
+      auth().signOut();
+    }
+  };
+
   const firstNameLastName = async emailData => {
     if (emailData != '') {
       await firestore()
@@ -71,8 +97,10 @@ export default function Profile(props) {
     var asyncEmailValue = await AsyncStorage.getItem('Email');
     var asyncFirstName = await AsyncStorage.getItem('firstName');
     var asyncLastName = await AsyncStorage.getItem('lastName');
-    // console.log('profilefirsttttttttttttt',);
+    var checkGoogle =await AsyncStorage.getItem('googleCheck')
 
+    // console.log('profilefirsttttttttttttt',);
+    setcheckGoogle(checkGoogle)
     setasyncEmail(asyncEmailValue);
     setasyncFirstName(asyncFirstName);
     setasyncLastName(asyncLastName);
