@@ -1,173 +1,130 @@
-//udate label touchable txt firestore true false touch ontext then textinputt
-
-import React, {useEffect, useState} from 'react';
-import {
-  Image,
-  Text,
-  TextInput,
-  View,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
-import LabelCss from '../css/UpdateDeleteLabelCss';
-//import CheckBox, {CheckBoxBase} from '@react-native-community/checkbox';
-import {
-  addLabel,
-  // EditLabelForEditeLabelScreen1,
-  getLabel,
-  handleDeleteService,
-  updateCheck,
-} from '../services/NotesServices';
-//import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import firestore from '@react-native-firebase/firestore';
-import IconFeather from 'react-native-vector-icons/Feather';
-import IconeMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconeEntypo from 'react-native-vector-icons/Entypo';
-import IconeMaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import IconeAntDesign from 'react-native-vector-icons/AntDesign';
+// import firestore from '@react-native-firebase/firestore';
+// import IconFeather from 'react-native-vector-icons/Feather';
+// import IconeMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+// import IconeEntypo from 'react-native-vector-icons/Entypo';
+// import IconeMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+// import IconeAntDesign from 'react-native-vector-icons/AntDesign';
 import AdditeDeleteLabelCard from '../Component/AdditeDeleteLabelCard';
 
-export default function UpdateDeleteLabel({props, route, navigation}) {
-  const [labelText, setlabelText] = useState('');
-  const [labelArray, setlabelArray] = useState([]);
-  const [checked, setChecked] = useState(false);
-  //const [LabbelArr, setLabbelArr] = useState([]);
-  //const [labelArrDataState, setlabelArrDataState] = useState([]);
-  const [crossPlus, setcrossPlus] = useState(true);
-  ///const [editDelete, setEditDelete] = useState(true);
-  const [labelTextEdit, setlabelTextEdit] = useState('');
-  //const [arr1, setarr1] = useState([]);
-  //const [LabelName, setLabelName] = useState('');
+import React, {useCallback} from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  Dimensions,
+  FlatList,
+} from 'react-native';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {addLabel, fetchLabelsData} from '../services/NotesServices';
+import LabelUpdateDeleteCss from '../css/LabelUpdateDeleteCss';
+//import {addLabel, fetchLabelsData} from '../services/noteServices';
 
-  // const navigation = useNavigation();
+// import { useDispatch, useSelector } from 'react-redux';
+// import { setLabelData } from '../redux/actions';
 
-  //console.log('checked1',checked);
+const widthOfScreen = Dimensions.get('screen').width;
+const heightOfScreen = Dimensions.get('screen').height;
+const UpdateDeleteLabelProcess = ({navigation}) => {
+  const [labelData, setLabelData] = React.useState([]);
+  const [label, setLabel] = React.useState('');
+  const [icon, SetIcon] = React.useState(false);
+  const [add, setAdd] = React.useState(false);
+  //const [editIcon, setEditIcon] = React.useState(false);
+  const [checked, setChecked] = React.useState(false);
 
-  var addLabelIntoFirbase = async () => {
-    let LabelResponse = await addLabel(labelText, checked);
-    getLabel().then(res => {
-      setlabelArray(res);
+  // const labelData = useSelector(state => state.labelData)
+  // const dispatch = useDispatch();
+
+  // fetch data using redux labelData state
+  const fetchData = async () => {
+    let data = await fetchLabelsData();
+    setLabelData(data);
+  };
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
     });
+
+    return unsubscribe;
+  }, [navigation, fetchData]);
+
+  const toggle = () => {
+    setAdd(!add);
+    SetIcon(!icon);
+    setLabel('');
+  };
+
+  //function for add label
+  const labelOperation = (changeData = {}) => {
+   // const noteData = {label};
+  
+    addLabel(label, checked).then(() => {
+    //  setLabel('');
+      fetchData();
+    });
+  };
+  const onCheckButton = () => {
+    if(label != '')
+    labelOperation();
   };
 
   var labelForCreateScreen = () => {
-    let filterLabelArray = [];
-    labelArray.map(filterlabel => {
-      if (filterlabel._data.CheckBox === true) {
-        filterLabelArray.push(filterlabel._data.Label);
-      }
-    });
-    //  console.log('filterlabelllllllllllllllllllllll',filterLabelArray);
-    navigation.navigate('dashBoard', {LabbelArr: filterLabelArray});
+    navigation.navigate('dashBoard');
   };
-
-  const updadateidvalue = (id, newValue) => {
-    updateCheck(id, newValue);
-
-    getLabel().then(res => {
-      setlabelArray(res);
-    });
-  };
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      getLabel().then(res => {
-        console.log('ressssss',res);
-        setlabelArray(res);
-      });
-
-      return unsubscribe;
-    });
-  }, []);
-
-  const handleCrossCheck = () => {
-    // console.log('=============>');
-    setcrossPlus(true);
-    setlabelText('');
-  };
-
-  const setText = text => {
-    setlabelText(text);
-    setcrossPlus(false);
-  };
-
-  const onFocus = () => {
-    setcrossPlus(false);
-  };
-
-  const handleInputLabel = (Text, id) => {
-    let inputNewData = {
-      Label: Text,
-    };
-
-    setlabelTextEdit(Text);
-    firestore().collection('Label').doc(id).update(inputNewData);
-
-    getLabel().then(res => {
-      setlabelArray(res);
-    });
-
-    // console.log('=============---------->', Text);
-
-    console.log('=============---------->', labelTextEdit);
-  };
-
-  const handleInputData = data => {
-    console.log('|||||||||||||||', data);
-  };
-
   return (
-    <View style={LabelCss.container1}>
-      <View style={LabelCss.container2}>
-        <View style={LabelCss.arrowinputlabel}>
+    <View style={{flex: 1, marginTop: 20}}>
+      <View style={LabelUpdateDeleteCss.header}>
+        <View>
           <TouchableOpacity onPress={labelForCreateScreen}>
-            <Image
-              style={LabelCss.arrowpic}
-              source={require('../Assets/icons/backArrow.png')}
-            />
+            <Icons name="arrow-left" size={25} color="black" />
           </TouchableOpacity>
-
-          <Text style={LabelCss.Editlabels}>Edit labels</Text>
         </View>
-        <View style={LabelCss.plusview}>
-          <TouchableOpacity onPress={() => setcrossPlus(false)}>
-            {crossPlus ? (
-              <IconFeather name="plus" size={25} color="gray" />
-            ) : null}
+        <View>
+          <Text style={LabelUpdateDeleteCss.titleStyle}>Edit Labels</Text>
+        </View>
+      </View>
+      <View style={LabelUpdateDeleteCss.label}>
+        <View style={{padding: 10}}>
+          <TouchableOpacity onPress={toggle}>
+            {icon ? (
+              <Icons name="plus" size={25} color="#525252" />
+            ) : (
+              <AntDesign name="close" size={25} color="black" />
+            )}
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleCrossCheck()}>
-            {!crossPlus ? (
-              <IconeEntypo name="cross" size={25} color="gray" />
-            ) : null}
-          </TouchableOpacity>
-
+        </View>
+        <View>
           <TextInput
-            // caretHidden={false}
-            onFocus={onFocus}
+            style={{fontSize: 18, width: 250, marginLeft: '10%', height: 60}}
             placeholder="Create new label"
-            style={LabelCss.TextInput}
-            onChangeText={text => setText(text)}
-            value={labelText}
-          />
-
-          <TouchableOpacity
-            onPress={() => {
-              addLabelIntoFirbase();
-            }}>
-            {!crossPlus ? (
-              <IconFeather style={LabelCss.check} name="check" size={25} />
-            ) : null}
-          </TouchableOpacity>
-        </View>
-        <View style={{flex: 1, padding: 30, marginBottom: 10}}>
-          <FlatList
-            data={labelArray}
-            renderItem={({item}) => <AdditeDeleteLabelCard {...item} />}
-            keyExtractor={item => item.id}
-            
+            placeholderTextColor="grey"
+            value={label}
+            onChangeText={text => setLabel(text)}
           />
         </View>
+        <View style={LabelUpdateDeleteCss.check}>
+          {!add ? (
+            <TouchableOpacity onPress={onCheckButton}>
+              <AntDesign name="check" size={25} color="black" />
+            </TouchableOpacity>
+          ) : null}
+        </View>
+      </View>
+      <View style={{flex: 1, marginTop: 10}}>
+        <FlatList
+          data={labelData}
+          renderItem={({item}) => (
+            <AdditeDeleteLabelCard {...item} fetchData={fetchData} />
+          )}
+          keyExtractor={item => item.labelId}
+        />
       </View>
     </View>
   );
-}
+};
+
+export default UpdateDeleteLabelProcess;

@@ -87,9 +87,11 @@ export function DrawerContent({props, navigation}) {
             marginTop: 10,
           }}></View>
         <View style={CustomDrawerCss.LabelsEdit}>
+          <TouchableOpacity >
           <Text>Labels</Text>
+          </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate('UpdateDeleteLabel')}>
+            onPress={()=>navigation.navigate('UpdateDeleteLabelProcess')}>
             <Text style={CustomDrawerCss.Edit}>Edit</Text>
           </TouchableOpacity>
         </View>

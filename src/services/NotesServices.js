@@ -14,7 +14,7 @@ export const noteData = async (
   date,
   time,
   dateTimeChipBoolean,
-  randomId
+  randomId,
 ) => {
   let response;
 
@@ -36,7 +36,7 @@ export const noteData = async (
     Date: date,
     Time: time,
     DateTimeChipBoolean: dateTimeChipBoolean,
-    RandomId:randomId
+    RandomId: randomId,
   };
 
   await firestore()
@@ -101,7 +101,6 @@ export const editNoteDataUpdate = (
     Pin: pin,
     Archive: archive,
     LabelArr: labelArrayfromLabelArr,
-   
   };
 
   firestore().collection('notes').doc(key).update(userNoteDataUpdate);
@@ -113,31 +112,31 @@ export const editNoteDataUpdate = (
   //   console.log('firebase error update time' + error);
   //   return error;
   // });
- // console.log('77777777777', title);
+  // console.log('77777777777', title);
 };
 
-export const deleteBooleanChipUpdate=(key,chipBoolean)=>{
+export const deleteBooleanChipUpdate = (key, chipBoolean) => {
+  let editChipBoolean = {
+    DateTimeChipBoolean: chipBoolean,
+  };
 
-  let editChipBoolean={
-    DateTimeChipBoolean:chipBoolean
-  }
-
-  firestore().collection('notes').doc(key).update(editChipBoolean)
-}
-
-export const editNoteDataUpdateTimeDate = (key,date, time,timeDateBoolean) => {
-let timeDateUpdate={
-  Date: date,
-  Time: time,
-  DateTimeChipBoolean:timeDateBoolean
-}
-
-firestore().collection('notes').doc(key).update(timeDateUpdate)
-
+  firestore().collection('notes').doc(key).update(editChipBoolean);
 };
 
+export const editNoteDataUpdateTimeDate = (
+  key,
+  date,
+  time,
+  timeDateBoolean,
+) => {
+  let timeDateUpdate = {
+    Date: date,
+    Time: time,
+    DateTimeChipBoolean: timeDateBoolean,
+  };
 
-
+  firestore().collection('notes').doc(key).update(timeDateUpdate);
+};
 
 //add label,checkBox data into firestore with email
 export const addLabel = async (labelText, isSelected) => {
@@ -163,6 +162,7 @@ export const addLabel = async (labelText, isSelected) => {
       return error;
     });
 };
+//************************************************************** */
 
 //get user data from firestore by email
 export const getLabel = async () => {
@@ -187,6 +187,25 @@ export const getLabel = async () => {
   //console.log('LabelListarr',LabelList);
   return LabelList;
 };
+//********************************************************************** */
+export const fetchLabelsData = async () => {
+  const arr = [];
+  var getasyncEmail = await AsyncStorage.getItem('Email');
+  return firestore()
+    .collection('Label')
+    .where('Email', '==', getasyncEmail)
+    .get()
+    .then(querySnapshot => {
+     // console.log('Total labels: ', querySnapshot.size);
+      querySnapshot.forEach(documentSnapshot => {
+        const docData = documentSnapshot.data();
+        docData.labelId = documentSnapshot.id;
+        arr.push(docData);
+      });
+      return arr;
+    });
+};
+//********************************************************************** */
 
 export const updateCheck = async (key, checkValue) => {
   let label = {
@@ -207,11 +226,11 @@ export const createImagecolleciton = async () => {
       Image: 'https://www.w3schools.com/howto/img_avatar.png' || '',
     })
     .then(() => {
-     // console.warn('user img added');
+      // console.warn('user img added');
     })
-    .catch(
-     // console.log('user img not added')
-      );
+    .catch
+    // console.log('user img not added')
+    ();
 };
 
 export const handleProfileUpdate = (url, profileId) => {
@@ -295,15 +314,14 @@ export const EditLabelForEditeLabelScreen1 = labelArrData2 => {
   });
 };
 
-
 export const generateRandomIdData = () => {
   let RandomNoteId = Math.floor(Math.random() * (9999 - 1000 + 1) + 1000);
-  
+
   //  let RandomNoteId = 1708
- // console.log('17088888888888888888', RandomNoteId);
+  // console.log('17088888888888888888', RandomNoteId);
 
   //this.setState({RandomId: RandomNoteId});
- firestore()
+  firestore()
     .collection('notes')
     .where('RandomId', '==', RandomNoteId)
     .get()
@@ -313,23 +331,45 @@ export const generateRandomIdData = () => {
       }),
     )
     .catch(error => console.log('cuserror', error));
-    return RandomNoteId
+  return RandomNoteId;
 };
 
-
-export const updateNotificationId=(key,notificationPushId)=>{
+export const updateNotificationId = (key, notificationPushId) => {
   let notificationId = {
-    RandomId:notificationPushId
-  }
-  firestore().collection('notes').doc(key).update(notificationId)
-}
+    RandomId: notificationPushId,
+  };
+  firestore().collection('notes').doc(key).update(notificationId);
+};
 
-export const handleDeleteService=(id)=>{
+export const handleDeleteService = id => {
+  firestore()
+    .collection('Label')
+    .doc(id)
+    .delete()
+    .then(() => {
+      console.log('User deleted!');
+    });
+};
+
+export const deleteLabel = async labelId => {
+  firestore()
+    .collection('Label')
+    .doc(labelId)
+    .delete()
+    .then(() => {
+      console.log('label deleted');
+      //fetchLabelsData()
+    });
+};
+
+export const updateLabel = async (labelData, labelId) => {
+ // console.log("updating labelData...=>", labelData);
+ // console.log("updating labelId...=>", labelId);
   firestore()
   .collection('Label')
-  .doc(id)
-  .delete()
-  .then(() => {
-    console.log('User deleted!');
-  });
-}
+      .doc(labelId)
+      .update(labelData)
+      .then(() => {
+          console.log('label updated');
+      })
+};

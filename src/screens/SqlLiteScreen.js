@@ -124,7 +124,7 @@ class SqlLiteScreen extends Component {
       <View style={styles.container1}>
         <View style={Global.ImageLabelView}>
           <Image
-            source={require('G:/@react native bridgelabz/Fundoo_Notes_RN/src/Assets/images/noteslogo.png')}
+            source={require('G:/@react native bridgelabz/Fundoo_Notes_RN/src/Assets/images/noteslogo1.png')}
             style={Global.ImageLogo}></Image>
           <Text style={Global.FundooNotestxt}>
             User Name : {this.state.SqlName}

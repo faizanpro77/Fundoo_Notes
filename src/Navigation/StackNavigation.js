@@ -16,6 +16,7 @@ import DeleteScreen from '../screens/DeleteScreen';
 import SearchScreen from '../screens/SearchScreen';
 import SplashScreen from '../screens/SplashScreen';
 import EditeLabelScreen from '../screens/EditeLabelScreen';
+import UpdateDeleteLabelProcess from '../screens/UpdateDeleteLabelProcess';
 
 const Stack = createNativeStackNavigator();//screen and navigator
 
@@ -35,7 +36,7 @@ const StackNavigation = () => {
                 <Stack.Screen name='createLabel' component={LabelScreen}/>
                 <Stack.Screen name='SearchNote' component={SearchScreen}/>
                 <Stack.Screen name='EditeLabelScreen' component={EditeLabelScreen}/>
-                
+                <Stack.Screen name='UpdateDeleteLabelProcess' component={UpdateDeleteLabelProcess}/>
                
             </Stack.Navigator>
         </NavigationContainer>
