@@ -62,11 +62,7 @@ export default function LabelScreen({props, route, navigation}) {
       setlabelArray(res);
     });
 
-    // const {BooleanDarawerData} = props.params;
-    // console.log(
-    //   'BooleanDarawerBooleanDarawerBooleanDarawer',
-    //   props.route.params,
-    // );
+   
 
     // });
     // return unsubscribe;

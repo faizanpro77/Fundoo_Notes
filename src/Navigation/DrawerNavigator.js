@@ -7,8 +7,9 @@ import ArchiveScreen from '../screens/ArchiveScreen';
 import DeleteScreen from '../screens/DeleteScreen';
 import SqlLiteScreen from '../screens/SqlLiteScreen';
 import {DrawerContent} from './DrawerContent';
-import StackNavigation from './StackNavigation';
+//import StackNavigation from './StackNavigation';
 import LabelScreen from '../screens/LabelScreen';
+//import UpdateDeleteLabel from '../screens/UpdateDeleteLabel';
 import UpdateDeleteLabel from '../screens/UpdateDeleteLabel';
 
 const Drawer = createDrawerNavigator();
@@ -25,6 +26,7 @@ const DrawerNavigator = () => {
       <Drawer.Screen name="SqlLiteScreen" component={SqlLiteScreen} /> 
       <Drawer.Screen name="LabelScreen" component={LabelScreen}/>
       <Drawer.Screen name='UpdateDeleteLabel' component={UpdateDeleteLabel}/>
+
     </Drawer.Navigator>
   );
 };

@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import firestore from '@react-native-firebase/firestore';
+//import firestore from '@react-native-firebase/firestore';
 import React, {Component} from 'react';
 //import { DrawerActions} from '@react-navigation/native';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import {Card} from 'react-native-elements';
+//import RBSheet from 'react-native-raw-bottom-sheet';
+//import {Card} from 'react-native-elements';
 import {
   View,
   Text,
@@ -16,10 +16,10 @@ import {
 import DashBoardCss from '../css/DashBoardCss';
 import DashboardCard from '../Component/DashboardCard';
 import Profile from '../Component/Profile';
-import {TextInput} from 'react-native-gesture-handler';
-import {getNotes, setAllCheckBoxValueFalse} from '../services/NotesServices';
-import {NodePath} from '@babel/traverse';
-import {Avatar} from 'react-native-elements';
+//import {TextInput} from 'react-native-gesture-handler';
+import { setAllCheckBoxValueFalse} from '../services/NotesServices';
+//import {NodePath} from '@babel/traverse';
+//import {Avatar} from 'react-native-elements';
 import PinCard from '../Component/PinCard';
 //import { firstNameLastName } from '../services/UserServices';
 

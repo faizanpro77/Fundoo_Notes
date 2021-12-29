@@ -1,46 +1,37 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
-import {useNavigation} from '@react-navigation/native';
 
-import {
-  Avatar,
-  Title,
-  Caption,
-  Paragraph,
-  Drawer,
-  Text,
-  TouchableRipple,
-} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import CustomDrawerCss from '../css/CustomDrawerCss';
-//import { Icon } from "react-native-elements/dist/icons/Icon";
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import IconeIonicons from 'react-native-vector-icons/Ionicons';
 import IconeFeather from 'react-native-vector-icons/Feather';
-import IconeAntDesign from 'react-native-vector-icons/AntDesign';
 import IconeMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {getLabel} from '../services/NotesServices';
-
-//import CustomDrawerCss from '../css/LabelScreenCss';
+import {fetchLabelsData, getLabel} from '../services/NotesServices';
+import {useSelector, useDispatch} from 'react-redux';
+import {setLabelData} from '../redux/actions';
 
 export function DrawerContent({props, navigation}) {
-  //const navigation = useNavigation();
   const [labelArray, setlabelArray] = useState([]);
-  // console.log('lllllllllllllllooooooo22');
+  const labelData = useSelector(state => state.labelData);
+  const dispatch = useDispatch();
 
-  //this componant rerender again again because i use use effecct as componentDidMount
-  useEffect(() => {
-    //const unsubscribe = navigation.addListener('focus', () => {
-    // console.log('lllllllllllllllooooooo1');
-    getLabel().then(res => {
-      setlabelArray(res);
+  // fetch data using redux labelData state
+  const fetchData = useCallback(async () => {
+    let data = await fetchLabelsData();
+    // setLabelData(data);
+    dispatch(setLabelData(data));
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
     });
 
-    //  });
-    // return unsubscribe;
-  }, [labelArray]);
+    return unsubscribe;
+  }, [navigation, fetchData]);
 
   return (
     <View style={{flex: 1}}>
@@ -87,22 +78,22 @@ export function DrawerContent({props, navigation}) {
             marginTop: 10,
           }}></View>
         <View style={CustomDrawerCss.LabelsEdit}>
-          <TouchableOpacity >
-          <Text>Labels</Text>
+          <TouchableOpacity>
+            <Text>Labels</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={()=>navigation.navigate('UpdateDeleteLabelProcess')}>
+            onPress={() => navigation.navigate('UpdateDeleteLabel')}>
             <Text style={CustomDrawerCss.Edit}>Edit</Text>
           </TouchableOpacity>
         </View>
 
         {
           /********************************************************************************************* */
-          labelArray.map((label, Index) => {
-            //  console.log('iddddddddddddddddd', label._data.Label + ' ' + Index);
+          labelData.map((label, Index) => {
+            //console.log('iddddddddddddddddd',label.Label+ ' ' + Index);
             return (
               <TouchableOpacity
-                key={label.id}
+                key={label.labelId}
                 onPress={() => navigation.navigate('dashBoard')}>
                 <View style={CustomDrawerCss.ImagelabeltxtView}>
                   <IconeMaterialCommunityIcons
@@ -111,7 +102,7 @@ export function DrawerContent({props, navigation}) {
                     color={'black'}
                   />
                   <Text style={CustomDrawerCss.labelpriority}>
-                    {label._data.Label}
+                    {label.Label}
                   </Text>
                 </View>
               </TouchableOpacity>
