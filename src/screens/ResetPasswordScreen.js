@@ -76,7 +76,7 @@ class ResetPasswordScreen extends Component {
       <View style={ResetPasswordScreenCss.container1}>
         <View style={Global.ImageLabelView}>
           <Image
-            source={require('G:/@react native bridgelabz/Fundoo_Notes_RN/src/Assets/images/noteslogo1.png')}
+            source={require('../Assets/images/noteslogo1.png')}
             style={Global.ImageLogo}></Image>
           <Text style={Global.FundooNotestxt}>Fundoo Notes</Text>
         </View>

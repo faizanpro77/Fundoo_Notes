@@ -6,16 +6,16 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {Avatar} from 'react-native-elements';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
-//import DashBoardScreen from '../screens/DashBoardScreen';
 import {handleProfileUpdate} from '../services/NotesServices';
 import DashBoardCss from '../css/DashBoardCss';
 import {Card} from 'react-native-elements';
-//import RBSheet from 'react-native-raw-bottom-sheet';
 import Modal from 'react-native-modal';
 import IconeEntypo from 'react-native-vector-icons/Entypo';
+
+
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-//import {signIn} from '../services/UserServices';
 import auth from '@react-native-firebase/auth';
+import MaterialCommunityIconsIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function Profile(props) {
   const navigation = useNavigation();
@@ -37,7 +37,7 @@ export default function Profile(props) {
   // const[avtarImage,setavtarImage]=useState('https://www.w3schools.com/howto/img_avatar.png')
   const [open, setopen] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [checkGoogle,setcheckGoogle] = useState('')
+  const [checkGoogle, setcheckGoogle] = useState('');
 
   const removeAsyncStorage = () => {
     setModalVisible(!isModalVisible);
@@ -49,9 +49,8 @@ export default function Profile(props) {
   };
   //--------------
   googleSignout = async () => {
-    
     // var checkGoogle =await AsyncStorage.getItem('googleCheck')
-    console.log('-----------------000000',checkGoogle);
+    console.log('-----------------000000', checkGoogle);
     if (checkGoogle == 'true') {
       console.log('lougouttttttttttttttttt');
       try {
@@ -97,10 +96,10 @@ export default function Profile(props) {
     var asyncEmailValue = await AsyncStorage.getItem('Email');
     var asyncFirstName = await AsyncStorage.getItem('firstName');
     var asyncLastName = await AsyncStorage.getItem('lastName');
-    var checkGoogle =await AsyncStorage.getItem('googleCheck')
+    var checkGoogle = await AsyncStorage.getItem('googleCheck');
 
     // console.log('profilefirsttttttttttttt',);
-    setcheckGoogle(checkGoogle)
+    setcheckGoogle(checkGoogle);
     setasyncEmail(asyncEmailValue);
     setasyncFirstName(asyncFirstName);
     setasyncLastName(asyncLastName);
@@ -204,10 +203,7 @@ export default function Profile(props) {
             <View style={{flexDirection: 'row'}}>
               <View style={DashBoardCss.menueImgview}>
                 <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                  <Image
-                    style={DashBoardCss.menueImg}
-                    source={require('../Assets/icons/menu.png')}
-                  />
+                  <IconeEntypo name="menu" size={25} color="black" />
                 </TouchableOpacity>
               </View>
               <View>
@@ -221,18 +217,20 @@ export default function Profile(props) {
               {open ? (
                 <View style={DashBoardCss.listImgview}>
                   <TouchableOpacity onPress={() => gridView()}>
-                    <Image
-                      style={DashBoardCss.listImg}
-                      source={require('../Assets/icons/grid.png')}
+                  <MaterialCommunityIconsIcons
+                      name="view-grid-outline"
+                      size={25}
+                      color="black"
                     />
                   </TouchableOpacity>
                 </View>
               ) : (
                 <View style={DashBoardCss.listImgview}>
                   <TouchableOpacity onPress={() => gridView()}>
-                    <Image
-                      style={DashBoardCss.listImg}
-                      source={require('../Assets/icons/list.png')}
+                    <MaterialCommunityIconsIcons
+                      name="view-agenda-outline"
+                      size={25}
+                      color="black"
                     />
                   </TouchableOpacity>
                 </View>

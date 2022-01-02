@@ -22,6 +22,11 @@ import { setAllCheckBoxValueFalse} from '../services/NotesServices';
 //import {Avatar} from 'react-native-elements';
 import PinCard from '../Component/PinCard';
 //import { firstNameLastName } from '../services/UserServices';
+import IconeAntDesign from 'react-native-vector-icons/AntDesign'; 
+import IconeMaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
+import IconeMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; 
+
+
 
 class DashBoardScreen extends Component {
   constructor(props) {
@@ -117,33 +122,42 @@ class DashBoardScreen extends Component {
           <View style={DashBoardCss.footer}>
             <View>
               <TouchableOpacity>
-                <Image
-                  style={DashBoardCss.checkboxImg}
-                  source={require('../Assets/icons/checkbox.png')}
+               
+                <IconeAntDesign
+                name='checksquareo'
+                color='black'
+                size={25}
+                style={DashBoardCss.checkBoxrushMicImg}
                 />
               </TouchableOpacity>
             </View>
             <View>
               <TouchableOpacity>
-                <Image
-                  style={DashBoardCss.brushImg}
-                  source={require('../Assets/icons/brush.png')}
+              <IconeMaterialCommunityIcons
+                name='brush'
+                color='black'
+                size={25}
+                style={DashBoardCss.checkBoxrushMicImg}
                 />
               </TouchableOpacity>
             </View>
             <View>
               <TouchableOpacity>
-                <Image
-                  style={DashBoardCss.micImg}
-                  source={require('../Assets/icons/mic.png')}
+              <IconeMaterialIcons
+                name='mic-none'
+                color='black'
+                size={25}
+                style={DashBoardCss.checkBoxrushMicImg}
                 />
               </TouchableOpacity>
             </View>
             <View>
               <TouchableOpacity>
-                <Image
-                  style={DashBoardCss.Img}
-                  source={require('../Assets/icons/photo.png')}
+              <IconeMaterialIcons
+                name='crop-original'
+                color='black'
+                size={25}
+                style={DashBoardCss.checkBoxrushMicImg}
                 />
               </TouchableOpacity>
             </View>

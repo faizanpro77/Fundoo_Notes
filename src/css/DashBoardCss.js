@@ -63,9 +63,7 @@ const DashBoardCss = StyleSheet.create({
     alignItems: 'center',
   },
 
-  checkboxImg: {
-    height: 24,
-    width: 24,
+  checkBoxrushMicImg: {
     marginLeft: 14,
   },
   brushImg: {
